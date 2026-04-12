@@ -9,7 +9,7 @@ load_dotenv(Path(__file__).parent / ".env")
 
 logger = logging.getLogger(__name__)
 
-MONGO_URL = os.environ.get("MONGO_URL") or os.environ.get("MONGODB_URL") or os.environ.get("MONGO_PUBLIC_URL", "mongodb://localhost:27017")
+MONGO_URL = (os.environ.get("MONGO_URL") or os.environ.get("MONGODB_URL") or os.environ.get("MONGO_PUBLIC_URL", "mongodb://localhost:27017")).strip()
 DB_NAME = os.environ.get("DB_NAME", "leonida_guide")
 
 logger.info(f"Connecting to MongoDB: {MONGO_URL[:30]}... | DB: {DB_NAME}")
