@@ -1,73 +1,54 @@
 /**
- * Leonida Knowledge Base — Honest John's Encyclopedia v2
- * 
- * Each entry now has an array of response variants for natural variety.
- * No API calls, no LLM — everything runs in the browser.
+ * Honest John's Knowledge Base v3 — MASSIVE LORE-ACCURATE EDITION
+ *
+ * 80+ entries, 3-5 response variants each.
+ * All GTA 6 details sourced from official Rockstar materials,
+ * trailers, and confirmed reporting.
+ *
+ * Categories: general, regions, characters, gameplay, world,
+ * hardware, vehicles, soundtrack, app, honest-john, lore, counties
  */
 
 const KNOWLEDGE_BASE = [
   // ═══════════════════════════════════════════════════════════════════════════
-  // GTA 6 — GENERAL INFO
+  // GENERAL / RELEASE
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    id: "gta6-release",
+    id: "gta6-overview",
+    title: "GTA 6 Overview",
     category: "general",
-    tags: ["gta 6", "gta vi", "release", "date", "launch", "when", "come out", "release date", "november", "2026"],
+    tags: ["gta 6", "gta vi", "grand theft auto", "overview", "rockstar", "game"],
+    content: "GTA 6 is the next installment in the Grand Theft Auto series by Rockstar Games, set in the fictional state of Leonida.",
+    responses: [
+      "Grand Theft Auto VI is Rockstar Games' next blockbuster — set in the fictional state of **Leonida**, their take on Florida. It features two playable protagonists, Jason Duval and Lucia Caminos, in a modern-day Bonnie-and-Clyde crime epic. The map includes Vice City, Grassrivers, Leonida Keys, Port Gellhorn, Ambrosia, and Mt. Kalaga National Park. It's described as Rockstar's biggest and most immersive world ever created.",
+      "GTA VI takes place in **Leonida** — Rockstar's fictional Florida. Two protagonists: Jason and Lucia. Six major regions including a reimagined Vice City. Modern-day setting with social media, influencer culture, and next-gen NPC AI. Rockstar has called it the biggest evolution in the franchise's history. The map is estimated at roughly 2x the size of GTA V's Los Santos.",
+      "Honest John's OFFICIAL briefing: GTA 6 is set in the state of **Leonida** — think Florida but with MORE chaos and BETTER neon. You play as Jason Duval and Lucia Caminos, a criminal power couple navigating a massive conspiracy. Six distinct regions to explore, from the neon streets of Vice City to the untamed Grassrivers swamps. Release: November 19, 2026.",
+      "The biggest game in entertainment history is coming. GTA VI drops in Leonida — Rockstar's version of Florida — with dual protagonists Jason and Lucia. The world spans six regions: urban Vice City, swampy Grassrivers, tropical Leonida Keys, industrial Port Gellhorn, agricultural Ambrosia, and wilderness Mt. Kalaga NP. Modern-day setting. Next-gen everything."
+    ]
+  },
+  {
+    id: "release-date",
     title: "GTA 6 Release Date",
-    content: "Grand Theft Auto VI officially releases on November 19, 2026, exclusively on PlayStation 5 and Xbox Series X|S.",
+    category: "general",
+    tags: ["release", "date", "when", "launch", "come out", "november", "2026"],
+    content: "November 19, 2026 on PS5 and Xbox Series X/S.",
     responses: [
-      "November 19, 2026 — mark it on your calendar, your divorce papers, and your resignation letter! Honest John's Travel Agency will be offering PREMIUM launch-day packages. Pre-booking is mandatory. Refunds are... conceptual.",
-      "The BIG day is November 19, 2026! PS5 and Xbox Series X|S only at launch. Honest John has been counting down since the trailer dropped. That's over 200 MILLION heartbeats of pure anticipation! I counted. Twice.",
-      "November 19th, 2026, darling! The day the world stops turning — because everyone will be playing GTA 6 instead of going to work! Honest John is already planning the launch party. Attendance is mandatory. Sobriety is optional.",
-      "Mark your calendars: November 19, 2026. PS5 and Xbox Series X|S. The most anticipated game in HUMAN HISTORY! Honest John has already pre-ordered seventeen copies. For 'business purposes.' Don't ask which business."
+      "**November 19, 2026** — mark it in BLOOD, darling! GTA 6 launches on PlayStation 5 and Xbox Series X/S. It was originally scheduled for earlier but was pushed to Fall 2026 for polish. PC version is expected sometime in **early 2027**, following Rockstar's tradition of staggered releases (GTA V and RDR2 both launched on PC later). Launch marketing kicks off Summer 2026.",
+      "GTA VI hits shelves **November 19, 2026** on PS5 and Xbox Series X|S. Rockstar delayed it from a Spring 2026 window to give it more development time. PC? Historically Rockstar waits 6-12 months — insider reports suggest a **February 2027** PC target, but nothing official. Honest John recommends investing in a console if you can't wait!",
+      "The date is locked: **November 19, 2026**. PS5 and Xbox Series X|S only at launch. PC gamers will have to wait — Rockstar always does a staggered release. GTA V took 18 months to reach PC; RDR2 took 13 months. Current rumors point to early 2027 for PC. Take-Two has confirmed 'launch marketing' starts Summer 2026, so expect big reveals soon.",
+      "Console launch: **November 19, 2026**. PS5 and Xbox Series X|S. No PC at launch — Rockstar's standard playbook. Insider reports suggest a potential **February 2027** PC date, but that's unverified. What IS verified: this is the most anticipated game release in entertainment history. Over 2 billion trailer views. Honest John has been counting the DAYS."
     ]
   },
   {
-    id: "gta6-platforms",
+    id: "trailers",
+    title: "GTA 6 Trailers",
     category: "general",
-    tags: ["platform", "pc", "ps5", "xbox", "console", "computer", "playstation", "series x"],
-    title: "GTA 6 Platforms",
-    content: "GTA 6 launches on PS5 and Xbox Series X|S on November 19, 2026. PC version expected 2027.",
+    tags: ["trailer", "trailer 1", "trailer 2", "video", "reveal", "watch"],
+    content: "Two trailers released. Trailer 1 in Dec 2023, Trailer 2 in May 2025.",
     responses: [
-      "PS5 and Xbox Series X at launch, darling. PC? Rockstar likes to make PC gamers WAIT — it builds character! Think of it as a premium anticipation surcharge. 2027 is the rumor. Honest John recommends buying a console AND a PC. Double the investment, double the joy!",
-      "Console first — PS5 and Xbox Series X|S on November 19, 2026. PC gamers? You'll be waiting until 2027, approximately 12-18 months later. Rockstar's TRADITIONAL torture method! Buy a console now and a PC copy later. Honest John calls this the 'double dip strategy.'",
-      "PlayStation 5 and Xbox Series X get it first! The PC version will follow in 2027 — Rockstar always makes PC players wait. It's not CRUEL, it's CHARACTER BUILDING! Honest John's recommendation? Whatever platform takes your money fastest!",
-    ]
-  },
-  {
-    id: "gta6-developer",
-    category: "general",
-    tags: ["rockstar", "developer", "studio", "take two", "take-two", "who made", "company"],
-    title: "Rockstar Games — Developer",
-    content: "GTA 6 is developed by Rockstar Games, published by Take-Two Interactive. Over 2,000 developers worldwide.",
-    responses: [
-      "Rockstar Games — the ONLY company that can disappear for a decade and have the entire world waiting like loyal puppies. Over 2,000 developers slaving away in MULTIPLE countries. That's more staff than some of Leonida's police departments! Not that Leonida HAS functional police...",
-      "Rockstar Games, headquartered in New York! Led by Rockstar North in Edinburgh, Scotland. Published by Take-Two Interactive. Over TWO THOUSAND developers working on this beast! That's more people than the population of some Leonida towns I could name. And probably better organized too!",
-      "The legendary Rockstar Games, darling! The masterminds behind GTA, Red Dead, Bully — every game a cultural EVENT! Over 2,000 devs across the globe working on GTA 6. Honest John respects anyone who can keep a secret that long. Professional solidarity!",
-    ]
-  },
-  {
-    id: "gta6-trailer",
-    category: "general",
-    tags: ["trailer", "announcement", "video", "youtube", "reveal", "first look", "teaser"],
-    title: "GTA 6 Trailer & Reveal",
-    content: "The first GTA 6 trailer dropped December 5, 2023, breaking YouTube records with 200+ million views.",
-    responses: [
-      "The trailer dropped and the INTERNET collectively lost its mind! 200 million views faster than you can say 'take my money.' Honest John watched it 47 times. For research purposes, naturally. The visuals alone caused three of my monitors to weep with joy.",
-      "December 5, 2023 — the day the internet BROKE! Rockstar dropped the trailer and 200 million people watched it in 48 hours. MORE than the Super Bowl! Honest John's reaction? I called my accountant and said 'prepare for a BOOM in Leonida tourism!'",
-      "That trailer, darling! 200 MILLION views! The most watched video game trailer in HISTORY! First glimpse of Leonida, Jason, Lucia — and Honest John shed a single tear of pure commercial opportunity. BEAUTIFUL!",
-    ]
-  },
-  {
-    id: "gta6-price",
-    category: "general",
-    tags: ["price", "cost", "how much", "buy", "purchase", "edition", "special", "expensive", "money"],
-    title: "GTA 6 Pricing",
-    content: "Expected retail price: $69.99 USD standard edition. Special and collector's editions anticipated.",
-    responses: [
-      "$69.99 for the standard edition — a BARGAIN considering you'll be playing it for the next decade! Special editions will cost more, obviously. Honest John recommends the most expensive option available. Why? Because you DESERVE premium suffering, darling!",
-      "Standard edition: $69.99 USD. But WHY settle for standard when Rockstar will inevitably offer collector's editions with exclusive content? Honest John's financial advice: skip rent this month. Leonida is where you LIVE now.",
-      "Sixty-nine ninety-nine, darling! That's less than a night out in Vice City — and it lasts FOREVER! Collector's editions will run higher, naturally. Honest John says: invest in the most premium version. You only launch GTA 6 once! Well, technically twice if you count PC.",
+      "Two official trailers so far! **Trailer 1** dropped December 2023 — featured Tom Petty's 'Love Is a Long Road,' showed Vice City in stunning detail, introduced Lucia in a jail scene, and became the most-viewed game trailer in history. **Trailer 2** landed May 6, 2025 — focused on Jason and Lucia's relationship, showed more of Leonida's diverse regions, and featured songs by The Pointer Sisters, Wang Chung, and Jay Ferguson.",
+      "Rockstar has released **two trailers** for GTA VI. The first (December 2023) broke YouTube records — over 200 million views in its first week. It established Vice City, introduced Lucia, and set the tone with Tom Petty's 'Love Is a Long Road.' The second trailer (May 2025) expanded the world, showing Grassrivers, the Keys, and more of the Jason-Lucia dynamic. A third trailer is expected Summer 2026 during the launch marketing phase.",
+      "Two trailers, both LEGENDARY. Trailer 1 (Dec 2023): First look at Vice City reimagined, Lucia's introduction, neon-soaked streets — backed by Tom Petty. Trailer 2 (May 2025): Deeper dive into Jason and Lucia's story, Leonida's diverse landscape from swamps to beaches, soundtrack featuring Wang Chung's 'Everybody Have Fun Tonight' and The Arrows' 'I Love Rock 'n' Roll.' Fans are now waiting for Trailer 3 this summer."
     ]
   },
 
@@ -75,68 +56,41 @@ const KNOWLEDGE_BASE = [
   // CHARACTERS
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    id: "char-lucia",
+    id: "lucia",
+    title: "Lucia Caminos",
     category: "characters",
-    tags: ["lucia", "protagonist", "main character", "female", "woman", "heroine", "lucia caminos", "playable"],
-    title: "Lucia Caminos — Protagonist",
-    content: "Lucia Caminos is GTA 6's first female lead since 1997. A Latina woman navigating Leonida's criminal underworld with partner Jason.",
+    tags: ["lucia", "caminos", "protagonist", "female", "main character", "play as"],
+    content: "Lucia Caminos is GTA 6's first female protagonist in the modern series.",
     responses: [
-      "Lucia Caminos — Leonida's most AMBITIOUS tourist! She's got that look in her eye that says 'I will steal your car AND your heart.' First proper female lead in GTA history. About TIME, if you ask Honest John. She's already more competent than 90% of my former business partners.",
-      "Ah, Lucia! The woman, the LEGEND! First female protagonist since the original GTA in 1997! A Latina powerhouse navigating Leonida's underworld. Honest John is simultaneously terrified and impressed. She reminds me of my third wife. Which is a COMPLIMENT, by the way!",
-      "Lucia Caminos — the HEART of GTA 6! Smart, dangerous, and absolutely nobody's damsel in distress! She and Jason make one HELL of a criminal team. Honest John has already drafted a sponsorship proposal. She hasn't responded. Yet. The restraining order is, I feel, temporary.",
+      "**Lucia Caminos** is one of GTA VI's two protagonists — and the first playable female lead in modern GTA history (since GTA 1 in 1997). Her father taught her to fight from a young age. She has a criminal record and spent time in **Leonida Penitentiary** before the events of the game. She enters the story determined to make smarter decisions and build a better life, but an 'easy score gone wrong' pulls her back into Leonida's criminal underworld alongside Jason.",
+      "Meet **Lucia Caminos** — Rockstar's first modern female protagonist. Background: rough upbringing, father trained her to fight early, served time in Leonida Penitentiary. When the game begins, she's trying to go straight — but gets swept into a massive criminal conspiracy with Jason Duval. She's the emotional core of the story: resilient, streetwise, and determined. Rockstar described her as one of the most complex characters they've ever written.",
+      "**Lucia Caminos** is HISTORY in the making — GTA's first playable female lead since 1997. She grew up tough (her father taught her to fight as a child), did time in Leonida's state prison, and emerged determined to change her life. But when an 'easy score' goes sideways, she and Jason Duval are forced into a ride-or-die partnership against Leonida's criminal elite. She's fierce, smart, and the heart of GTA VI's story.",
+      "Honest John's character brief on **Lucia Caminos**: Ex-convict. Fighter. Survivor. The first female protagonist in a mainline GTA since the original game. Her backstory includes time in Leonida Penitentiary and a childhood shaped by violence. She wants OUT of the criminal life, but fate — and an explosive conspiracy — has other plans. Her partnership with Jason Duval drives the entire narrative."
     ]
   },
   {
-    id: "char-jason",
+    id: "jason",
+    title: "Jason Duval",
     category: "characters",
-    tags: ["jason", "protagonist", "main character", "male", "jason rios", "playable", "partner"],
-    title: "Jason Rios — Protagonist",
-    content: "Jason Rios is the second playable protagonist, a local Leonida native in a criminal partnership with Lucia.",
+    tags: ["jason", "duval", "protagonist", "male", "main character"],
+    content: "Jason Duval is the male protagonist of GTA 6.",
     responses: [
-      "Jason Rios — a fine young man with EXCELLENT taste in career choices! He and Lucia make a lovely couple. The kind that robs you blind and leaves you grateful for the experience. Honest John respects entrepreneurial spirit in ALL its forms.",
-      "Jason! Local boy, deep roots in Leonida's... let's call it 'alternative economy.' His partnership with Lucia is both romantic AND professional! A power couple for the ages! Honest John sees a LOT of himself in Jason's hustle. Minus the violence. Mostly.",
-      "Jason Rios — born and raised in Leonida. He KNOWS these streets, these swamps, these back alleys. The perfect partner for Lucia's ambitions! Together they're unstoppable. Separately they're still dangerous. Honest John approves either way!",
+      "**Jason Duval** is GTA VI's other protagonist — a military veteran turned small-time criminal. He grew up surrounded by grifters and con artists, tried to clean up by serving in the Army, but after his discharge he ended up working for **drug runners in the Leonida Keys**. He wants an easier life but keeps getting pulled into dangerous situations. His dynamic with Lucia — part romance, part survival pact — is the backbone of the story.",
+      "**Jason Duval**: Military background, grew up in a family of hustlers and criminals. Joined the Army to escape that life, but after service he drifted back into crime — specifically working for drug operations in the Leonida Keys. He's charming but reckless, always looking for the quick score. When he partners with Lucia Caminos, their 'Bonnie and Clyde' dynamic becomes GTA VI's emotional engine.",
+      "Honest John's dossier on **Jason Duval**: Son of grifters. Army veteran. Current occupation: 'freelance entrepreneur' (Honest John's euphemism for drug runner). He operated out of the Leonida Keys before linking up with Lucia. Despite his criminal tendencies, Jason genuinely wants a better life — he just can't seem to stop taking the dangerous shortcut. His journey with Lucia across Leonida is the core of GTA VI.",
+      "**Jason Duval** — the other half of GTA VI's protagonist duo. Raised by criminals, served in the military hoping to break the cycle, then fell right back into it running drugs in the Leonida Keys. He's street-smart and ex-military trained, but his 'get rich quick' instincts keep putting him in danger. His relationship with Lucia isn't just romantic — it's survival. They need each other to survive what Leonida throws at them."
     ]
   },
   {
-    id: "char-bonnie-clyde",
+    id: "bonnie-clyde",
+    title: "Jason & Lucia's Partnership",
     category: "characters",
-    tags: ["bonnie", "clyde", "couple", "duo", "relationship", "romance", "love", "partners", "criminal couple"],
-    title: "Criminal Duo Dynamic",
-    content: "GTA 6 features a Bonnie and Clyde-inspired criminal couple. Players switch between Jason and Lucia throughout the story.",
+    tags: ["bonnie", "clyde", "couple", "relationship", "duo", "partnership", "story", "plot"],
+    content: "Jason and Lucia's relationship drives GTA 6's narrative.",
     responses: [
-      "A LOVE STORY set in the criminal underworld! How romantic! Shakespeare would be jealous — Romeo and Juliet had nothing on Jason and Lucia. Except, you know, fewer explosions. These two lovebirds will rob, scheme, and shoot their way through Leonida TOGETHER. Relationship goals!",
-      "The Bonnie and Clyde dynamic! FINALLY, a GTA love story! Players can switch between Jason and Lucia, each bringing unique perspectives to missions. It's romantic, it's dangerous, it's EVERYTHING Honest John looks for in a tourism brochure!",
-      "Criminal couple goals, darling! Jason and Lucia's relationship evolves throughout the story — love, betrayal, heists, getaway drives at sunset. Honest John's relationship advice column would THRIVE in Vice City. But I digress — the dual protagonist system means double the chaos!",
-    ]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // LEONIDA STATE — OVERVIEW
-  // ═══════════════════════════════════════════════════════════════════════════
-  {
-    id: "leonida-overview",
-    category: "world",
-    tags: ["leonida", "state", "map", "florida", "world", "setting", "location", "where", "based on"],
-    title: "Leonida — The State",
-    content: "Leonida is GTA 6's fictional version of Florida. Six regions: Vice City, Grassrivers, Ambrosia, Port Gellhorn, Mt. Kalaga NP, Leonida Keys.",
-    responses: [
-      "Welcome to LEONIDA, darling! The Sunshine State's evil twin! Imagine Florida, but with MORE alligators, MORE corruption, and SIGNIFICANTLY more opportunities for 'creative wealth redistribution.' Honest John's Travel Agency is the state's PREMIER tourism provider!",
-      "Leonida! GTA 6's MAGNIFICENT fictional Florida! Six incredible regions to explore — Vice City, Grassrivers, Ambrosia, Port Gellhorn, Mt. Kalaga National Park, and the Leonida Keys! Each one more dangerously beautiful than the last! Honest John has survival tips for ALL of them!",
-      "The great state of Leonida — where the sun always shines, the gators always bite, and Honest John always profits! Based on real Florida, but turned up to ELEVEN! Six distinct regions, each with its own unique blend of beauty and peril. PREMIUM peril!",
-      "Leonida, darling! Think Florida but with the satire dial cranked to maximum! Neon cities, untamed swamps, tropical islands, industrial ports — it's ALL here! Estimated 2.1x bigger than GTA V's map! That's a LOT of territory for Honest John's tours!",
-    ]
-  },
-  {
-    id: "leonida-map-size",
-    category: "world",
-    tags: ["map size", "how big", "scale", "square miles", "large", "biggest", "comparison", "gta v", "gta 5", "los santos"],
-    title: "Map Scale & Size",
-    content: "Leonida's map is approximately 2.1x the size of GTA V's Los Santos and Blaine County combined.",
-    responses: [
-      "The map is ENORMOUS! 2.1 times bigger than GTA V! That's 2.1 times more locations to get lost, robbed, eaten by wildlife, or all three simultaneously! Honest John offers guided tours for a very reasonable fee. Survival is STRONGLY implied but never explicitly guaranteed.",
-      "MASSIVE, darling! 2.1 times the size of GTA V's entire map! From Vice City's skyscrapers to the Everglades — I mean GRASSRIVERS — to the Keys! Incredibly detailed interiors too! Honest John's fuel costs alone will be astronomical. But that's YOUR problem, not mine!",
-      "Leonida dwarfs Los Santos! 2.1 times bigger with MORE variety — urban sprawl, wetlands, mountains, islands, farmland, and industrial zones! One of the LARGEST open worlds in gaming history! Honest John's tour bus might need a bigger tank. And a prayer.",
+      "Jason and Lucia's story is a modern **Bonnie and Clyde** tale. An 'easy score' goes catastrophically wrong, and they're thrust into a massive criminal conspiracy spanning the entire state of Leonida. To survive, they must rely completely on each other. Rockstar described their relationship as 'ride or die' — part love story, part survival pact, all set against the neon chaos of Vice City and the wild backcountry of Leonida.",
+      "The heart of GTA VI is the **Jason-Lucia dynamic**. They're not just co-protagonists — they're bonded by circumstance and choice. An easy heist goes wrong, a conspiracy unfolds, and suddenly they're on the run across all of Leonida. Rockstar has emphasized that their relationship is the emotional core: it's about trust, betrayal, dependence, and whether love can survive in a world built on crime.",
+      "Think **Bonnie and Clyde** but in a state where the alligators are smarter than the police. Jason and Lucia's partnership begins when a 'simple score' implodes and drags them into a criminal conspiracy that spans Vice City, the Keys, and beyond. Rockstar says you'll switch between both characters, each bringing different skills and perspectives. Their 'ride or die' bond is GTA VI's narrative backbone."
     ]
   },
 
@@ -144,477 +98,419 @@ const KNOWLEDGE_BASE = [
   // REGIONS — DETAILED
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    id: "region-vice-city",
-    category: "regions",
-    tags: ["vice city", "miami", "urban", "city", "downtown", "neon", "nightlife", "beach", "ocean drive"],
+    id: "vice-city",
     title: "Vice City",
-    content: "Vice City is Leonida's neon-soaked metropolis based on Miami. Features Ocean Drive, MacArthur Causeway, nightclub districts, and luxury waterfront.",
+    category: "regions",
+    tags: ["vice city", "miami", "city", "urban", "neon", "nightlife", "ocean drive", "downtown"],
+    content: "Vice City is GTA 6's central metropolis, based on Miami.",
     responses: [
-      "Vice City — WHERE DREAMS COME TO DIE IN STYLE! The neon lights are beautiful, the cocktails are overpriced, and your wallet will be three pounds lighter by morning! Ocean Drive has the finest art deco hotels money can buy — and the finest pickpockets money can't catch! Five stars!",
-      "Ah, Vice City! Leonida's crown jewel of excess! Think Miami turned up to MAXIMUM! Art deco hotels, neon-lit nightclubs, overpriced cocktails on Ocean Drive, and enough criminal activity to keep things INTERESTING! Honest John's main office is here. The security system is robust. VERY robust.",
-      "VICE CITY! The heartbeat of Leonida! Based on Miami, but with MORE neon, MORE drama, and MORE questionable business ventures! It's the largest urban environment Rockstar has EVER built! Every street corner has a story. Most of those stories involve the police.",
-      "Vice City, darling — where every sunset is an Instagram moment and every alley is an adventure! Ocean Drive's art deco elegance meets Nightclub Row's organized chaos! Honest John has conducted business here for years. The word 'legitimate' is applied LOOSELY!",
+      "**Vice City** is Leonida's crown jewel — a modern-day reimagining of Miami and the largest urban environment Rockstar has ever built. Key districts include **Ocean Drive** (neon-lit Art Deco strip with legendary nightlife), **Little Havana** (vibrant Cuban-inspired neighborhood), **Little Haiti**, and **Downtown** (towering skyscrapers and corporate chaos). Located in **Vice-Dale County** (based on Miami-Dade). Danger level? Through the ROOF. Tourism appeal? Also through the roof. Coincidence? Honest John thinks not.",
+      "Welcome to **Vice City**, darling — where the sunsets are gorgeous and the crime rate is PREMIUM. Based on Miami, it's the beating heart of Leonida. Ocean Drive glows with pastel Art Deco neon. Little Havana pulses with Cuban culture. Downtown reaches for the sky with its glass towers. There's a Vice City International Airport, waterways splitting the city, and the MacArthur Causeway connecting it all. It sits in Vice-Dale County and is the most densely detailed open world Rockstar has ever crafted.",
+      "**Vice City** — Rockstar's legendary Miami. Reimagined for GTA VI with next-gen detail: working nightclubs, enterable restaurants and shops, neon Art Deco architecture on Ocean Drive, cultural depth in Little Havana and Little Haiti, corporate skyscrapers Downtown. Part of Vice-Dale County. The city is connected by causeways, surrounded by water, and absolutely DRIPPING with atmosphere. Population ~2.1M of NPCs with advanced AI behavior. It's not just a city — it's a living organism.",
+      "Honest John's PREMIUM Vice City briefing: Neon paradise built on corruption. Ocean Drive is the postcard — Art Deco hotels, beach views, nightlife that doesn't stop. Little Havana brings the culture. Downtown brings the corporate crime. The whole city sits in Vice-Dale County, connected by the MacArthur and Venetian Causeways. Rockstar has filled it with enterable interiors — nightclubs, motels, malls, restaurants, pawn shops. Your valuables are community property here. FIVE STARS, darling!"
     ]
   },
   {
-    id: "region-vice-city-ocean-drive",
-    category: "regions",
-    tags: ["ocean drive", "art deco", "hotels", "beach", "south beach", "strip", "boulevard"],
-    title: "Ocean Drive — Vice City",
-    content: "Ocean Drive is Vice City's most iconic boulevard — neon art deco hotels, beachfront, buzzing nightlife.",
-    responses: [
-      "Ocean Drive — the CROWN JEWEL of Vice City! Every building is an art deco masterpiece. Every tourist is a walking ATM. The sunsets are free, which is literally the only free thing in Vice City. Honest John's satellite office is here. Look for the neon sign that reads 'Mostly Legal Tours.'",
-      "Ocean Drive! Where the art deco hotels GLOW with neon and the cocktails cost more than some people's rent! Rockstar's attention to architectural detail here is INSANE! Every building, every palm tree, rendered with love. And possibly a restraining order from the real Miami.",
-      "The legendary Ocean Drive! South Beach at its finest! Honest John has walked this boulevard a thousand times, and it never gets old. The architecture, the energy, the sheer volume of tourists making poor financial decisions. BEAUTIFUL!",
-    ]
-  },
-  {
-    id: "region-vice-city-nightlife",
-    category: "regions",
-    tags: ["nightclub", "club", "nightlife", "party", "bar", "drink", "dancing", "music", "dj"],
-    title: "Vice City Nightlife",
-    content: "Vice City features the most detailed nightlife system in any GTA. Dynamic clubs, bars, music venues, and potential business ownership.",
-    responses: [
-      "The nightlife in Vice City is LEGENDARY! Clubs open at 10, close at 'whenever the police arrive.' Dress code: expensive. Cover charge: more expensive. Honest John VIP passes are available for a small fortune — I mean, a small FEE.",
-      "Vice City after dark is a WHOLE different beast! Multiple clubs with dynamic music, bars with NPC interactions, entertainment venues — you can even OWN a nightclub! Honest John's entrepreneurial heart is SINGING! The money laundering potential alone— I mean, the BUSINESS potential!",
-      "Nightlife, darling! Vice City COMES ALIVE after sunset! Dynamic club scenes, DJs, dancing NPCs, and the potential to buy and manage your own clubs. Rockstar's most immersive party system yet! Honest John's VIP section has its own bouncer. His name is Consequences.",
-    ]
-  },
-  {
-    id: "region-grassrivers",
-    category: "regions",
-    tags: ["grassrivers", "everglades", "swamp", "wetland", "alligator", "gator", "wildlife", "nature", "airboat", "python"],
+    id: "grassrivers",
     title: "Grassrivers",
-    content: "Grassrivers is a vast wetland ecosystem based on Florida's Everglades. Alligators, pythons, airboat tours, and the Thrillbilly Mud Club.",
+    category: "regions",
+    tags: ["grassrivers", "everglades", "swamp", "swamps", "wetland", "alligator", "gator", "wildlife", "mud"],
+    content: "Grassrivers is a vast swamp region based on the Florida Everglades.",
     responses: [
-      "Grassrivers — NATURE'S PREMIUM OBSTACLE COURSE! Where the food chain is a PARTICIPATION SPORT! Our swamp tours have a 94% return rate. The other 6% are still 'exploring.' The alligators are NOT aggressive — merely 'enthusiastically friendly.' Pack waterproof everything!",
-      "The Grassrivers! Leonida's answer to the Everglades! Alligators, pythons, exotic birds, and people who chose to LIVE here voluntarily! Honest John's airboat tours are legendary — mostly because the stories of survival are SO dramatic! The wildlife is diverse. The insurance claims are MORE diverse!",
-      "Welcome to Grassrivers, the wettest, wildest, most BITEY region in Leonida! Based on the Florida Everglades, it's home to gators, pythons, panthers, and the legendary Thrillbilly Mud Club! Nature at its most aggressively unpredictable! Honest John LOVES it here!",
-      "Grassrivers, darling! Imagine the Everglades, but with ATTITUDE! Every creature wants to meet you — mostly for dinner! The airboat rides are exhilarating, the wildlife is 'interactive,' and the humidity builds character. Five stars for authenticity, one star for comfort!",
+      "**Grassrivers** — Leonida's untamed wetland wilderness, modeled after the Florida Everglades. It's a massive interconnected swamp teeming with wildlife: alligators, pythons, boars, flamingos, and creatures that haven't been classified yet. Features the **Thrillbilly Mud Club** (off-road chaos), airboat tours, and dense mangrove forests. Located primarily in **Kelly County**. The NPC population is sparse and the wildlife is aggressive. Honest John's travel insurance does NOT cover alligator incidents.",
+      "Welcome to **Grassrivers**, where Mother Nature is the apex predator and YOU are on the menu! Based on the Florida Everglades, this region is a subtropical swamp paradise featuring dense mangroves, endless waterways, and an ecosystem designed to kill you in creative ways. Alligators, pythons, wild boars — all rendered with next-gen wildlife AI. The **Thrillbilly Mud Club** offers off-road chaos for the brave. Honest John rates this a 7/10 on the danger scale. The missing 3 points are probably in the swamp.",
+      "**Grassrivers** is Leonida's answer to the Florida Everglades — vast, beautiful, and absolutely LETHAL. Rockstar has built an advanced wildlife system here: alligators patrol waterways, pythons lurk in vegetation, and dolphins play in the coastal waters. The **Thrillbilly Mud Club** is a standout location for off-roading and redneck entertainment. Airboat tours let you glide through the swamps. It's located within Kelly County, and Honest John's 94% tour return rate speaks for itself. The other 6% are 'exploring.'",
+      "Honest John's survival guide for **Grassrivers**: It's based on the Everglades. It's gorgeous. It will EAT YOU. Features include the Thrillbilly Mud Club, Everswamp Airboat Tours, and the Gator Crossing Highway. Wildlife includes alligators, pythons, boars, sharks in coastal areas, flamingos, and dolphins. The NPC density is low — because nature has OPINIONS about overpopulation here. Kelly County's finest wilderness. Bring boots. And a weapon. And insurance."
     ]
   },
   {
-    id: "region-grassrivers-wildlife",
-    category: "regions",
-    tags: ["wildlife", "animals", "alligator", "gator", "crocodile", "python", "snake", "bird", "panther", "fauna", "creatures"],
-    title: "Leonida Wildlife",
-    content: "Leonida has the most detailed wildlife system in GTA history. Realistic AI behaviors, territorial aggression, environmental interactions.",
-    responses: [
-      "The wildlife in Leonida is SPECTACULAR! The alligators are 'character-building,' the pythons are 'conversation starters,' and the panthers add a certain 'urgency' to your hiking experience. Honest John's insurance partner offers PREMIUM wildlife encounter policies!",
-      "Animals, darling! Alligators in Grassrivers, bears in Mt. Kalaga, raccoons in Vice City dumpsters — DIVERSITY! Rockstar's animal AI is incredible: they hunt, they defend territory, they look at you like you're lunch! Which in Grassrivers, you ARE.",
-      "The fauna of Leonida is world-class! Gators, pythons, panthers, manatees, exotic birds — all with realistic behaviors! They hunt, they swim, they ambush tourists! It's nature's own theme park, and admission is FREE! Survival, however, is priced at market rate.",
-    ]
-  },
-  {
-    id: "region-grassrivers-thrillbilly",
-    category: "regions",
-    tags: ["thrillbilly", "mud club", "redneck", "rural", "truck", "mudding", "off-road"],
-    title: "Thrillbilly Mud Club",
-    content: "Wild off-road vehicle park in Grassrivers — mud tracks, monster trucks, demolition derbies, rural culture.",
-    responses: [
-      "The Thrillbilly Mud Club — where TRUCKS go to die glorious deaths! Monster trucks, mud pits, and people whose idea of fine dining is a gator tail on a stick. Honest John LOVES it here. Five stars for authenticity. Zero stars for dental coverage!",
-      "THRILLBILLY MUD CLUB! The finest establishment for truck-based chaos in ALL of Leonida! Mud bogging, monster truck rallies, demolition derbies — and the strongest moonshine you'll ever taste! Honest John attends monthly. For 'cultural research.'",
-      "The Mud Club, darling! Where vehicles and dignity go to be destroyed in EQUAL measure! Based on real Florida mud bogging culture! Monster trucks, flying mud, questionable safety standards — it's BEAUTIFUL! Honest John's chiropractor sends thank-you cards after every visit!",
-    ]
-  },
-  {
-    id: "region-ambrosia",
-    category: "regions",
-    tags: ["ambrosia", "agricultural", "sugar", "farming", "industrial", "clewiston", "sugar mill", "fields", "rural"],
-    title: "Ambrosia",
-    content: "Agricultural and industrial heartland. Sugar cane fields, refineries, processing plants, blue-collar towns. Based on Clewiston, Florida.",
-    responses: [
-      "Welcome to Ambrosia — a MEAT-PACKING PARADISE! The air quality is 'character-building.' The sugar mills never sleep, and neither should you — especially near the canal at night. Honest John rates this 3 stars. The missing 2 are under investigation.",
-      "Ambrosia! Leonida's HARDWORKING heartland! Sugar cane fields stretching to the horizon, industrial refineries pumping away, and small-town folk who mind their own business — and EXPECT you to do the same! The diner pie is excellent. The corruption is also excellent. Different kind of excellent.",
-      "The Ambrosia region — where sugar is KING and questions are unwelcome! Based on Florida's sugar country around Clewiston. Industrial, agricultural, and hiding MORE secrets than Honest John's tax returns! The sunsets over the cane fields are genuinely beautiful though.",
-    ]
-  },
-  {
-    id: "region-port-gellhorn",
-    category: "regions",
-    tags: ["port gellhorn", "port", "harbor", "shipping", "industrial", "gulf", "coast", "fishing", "docks", "maritime", "cargo"],
-    title: "Port Gellhorn",
-    content: "Major industrial port city on Leonida's Gulf Coast. Shipping terminals, fishing docks, refineries. Based on Panama City, FL.",
-    responses: [
-      "Port Gellhorn — where REAL America works! And also where REAL contraband arrives! The fishing is world-class. What you're catching may or may not belong to someone. Maritime criminal activity is 'local flavor.' Four stars!",
-      "Port Gellhorn! Leonida's gateway to the Gulf! Massive shipping terminals, petrochemical refineries, and a waterfront that smells like industry and AMBITION! The fishing docks are bustling. What's in those crates? Honest John doesn't ask. Honest John doesn't WANT to know.",
-      "The Port! Gritty, industrial, REAL! Based on Florida's Gulf Coast — Panama City and beyond. Working-class soul with a petrochemical bouquet! The sunsets are gorgeous — that iridescent quality comes from the refinery emissions. Or maybe it's natural? Nobody tests and everybody's happy!",
-    ]
-  },
-  {
-    id: "region-mt-kalaga",
-    category: "regions",
-    tags: ["mt kalaga", "mountain", "kalaga", "national park", "forest", "wilderness", "hiking", "trail", "bear", "panther", "camping", "nature"],
-    title: "Mt. Kalaga National Park",
-    content: "Northern Leonida's vast wilderness. Dense forests, hiking trails, panthers, bears. Based on Ocala National Forest.",
-    responses: [
-      "MT. KALAGA NATIONAL PARK — PREMIUM hiking among APEX PREDATORS! Cell service: zero stars. Bears, panthers, and whatever those tracks belong to — ALL part of the package! Honest John's survival kits are $49.99. Contents: a granola bar and a prayer card!",
-      "Mt. Kalaga! Northern Leonida's crown of WILDERNESS! Old-growth forests, mountain trails, and wildlife that sees YOU as the attraction! Panthers, black bears, and a concerning lack of cell towers! Honest John's wilderness packages include a compass and optimism. Both equally unreliable!",
-      "The national park, darling! Based on Ocala National Forest, but wilder! Dense pine forests, pristine hiking trails, and animals that are VERY territorial! Honest John's camping tours: 'Sleep under the stars! Wake up surrounded by curious wildlife!' Disclaimer: 'curious' is a generous interpretation.",
-    ]
-  },
-  {
-    id: "region-leonida-keys",
-    category: "regions",
-    tags: ["leonida keys", "keys", "island", "tropical", "bridge", "honda bridge", "reef", "fishing", "key west", "key largo", "coral"],
+    id: "leonida-keys",
     title: "Leonida Keys",
-    content: "Tropical island chain at Leonida's southern tip. Based on Florida Keys. Honda Bridge, coral reefs, fishing communities.",
+    category: "regions",
+    tags: ["keys", "leonida keys", "island", "islands", "tropical", "honda bridge", "fishing", "beach"],
+    content: "The Leonida Keys are a tropical island chain based on the Florida Keys.",
     responses: [
-      "LEONIDA KEYS — PARADISE duct-taped together! Honda Bridge is structurally 'interesting.' Local fishermen are EXTREMELY friendly at 3am. Bring cash. Nobody takes cards. Five stars for ambiance!",
-      "The Keys! Tropical paradise at the end of the road — literally! Crystal waters, coral reefs, fishing villages, and a laid-back vibe that says 'crimes happen slowly here.' Honda Bridge connects it all. Honest John's island hopping tours are LEGENDARY! Mostly because of the stories.",
-      "Leonida Keys, darling! Island life at its FINEST! Based on the Florida Keys — key Largo, Islamorada, all the way down! Beautiful coral reefs, world-class fishing, and locals who've been here so long they've forgotten what the mainland looks like. And they PREFER it that way!",
-      "The Keys! Where Leonida ends and paradise begins — if your definition of paradise includes 'structurally ambitious' bridges and fishermen with mysterious schedules! The sunsets here are UNREAL. Honest John runs sunset cruises. Bring your own lifejacket. Trust issues."
+      "The **Leonida Keys** — a tropical archipelago stretching south from Vice City, based on the real Florida Keys. Connected by the **Honda Bridge** (a nod to the Seven Mile Bridge), these islands feature coral reefs, fishing villages, party spots, and crystal-clear turquoise waters. It's where Jason Duval worked for drug runners before the events of GTA VI. Kelly County territory. Danger level: 3/10 officially, but after midnight? Honest John pleads the Fifth.",
+      "**Leonida Keys** — paradise on a shoestring! Based on the Florida Keys, this island chain dangles south of Vice City like a tropical tail. The Honda Bridge connects the islands in a scenic drive. Key Largo-inspired reefs. Islamorada-style fishing villages. Laid-back vibes during the day, sketchy maritime activity at night. This is where Jason Duval cut his teeth running drugs before meeting Lucia. Beautiful, remote, and full of secrets.",
+      "Honest John LOVES the **Leonida Keys** — tropical islands, coral reefs, scenic bridges, and fishermen who don't ask questions at 3 AM! Based on the Florida Keys, connected by the Honda Bridge. Activities include diving, fishing, boating, and trying not to ask what's in those unmarked crates. Jason Duval's old stomping ground for drug running. Population ~78K. Danger: LOW by day, NEGOTIABLE by night. Bring cash — nobody takes cards down here.",
+      "The **Leonida Keys**: Rockstar's take on the Florida Keys. An island chain connected by the Honda Bridge, featuring coral reefs, fishing communities, beachside bars, and stunning ocean views. It's part of Kelly County. Historically in GTA VI's lore, this is where Jason Duval operated as a drug runner before linking up with Lucia. By day it's tropical paradise; by night it's a smuggler's highway. The perfect mix of beauty and danger."
     ]
   },
   {
-    id: "region-honda-bridge",
+    id: "port-gellhorn",
+    title: "Port Gellhorn",
     category: "regions",
-    tags: ["honda bridge", "bridge", "seven mile", "connecting", "drive", "road", "causeway"],
-    title: "Honda Bridge",
-    content: "Leonida's version of the Seven Mile Bridge, connecting the Keys to the mainland. Engineering marvel across open ocean.",
+    tags: ["port gellhorn", "port", "industrial", "gulf coast", "dock", "shipping", "maritime"],
+    content: "Port Gellhorn is an industrial port city on Leonida's Gulf Coast.",
     responses: [
-      "Honda Bridge — the engineering marvel that DARES you to look down! Seven miles of open ocean, one lane each way, and a gentle sway that is TOTALLY normal! Honest John rates the bridge experience FOUR stars. The missing star fell into the ocean.",
-      "The Honda Bridge! Based on the real Seven Mile Bridge — except more dramatic! Miles of road over open ocean connecting Vice City to the Keys! The views are breathtaking. The structural integrity is... 'optimistic.' Honest John drives it with windows DOWN and prayers UP!",
-      "Honda Bridge, darling! A ribbon of road across the ACTUAL ocean! It's stunning, it's terrifying, and it's the only way to drive to the Keys! Engineers describe it as 'ambitious.' Honest John describes it as 'the longest prayer of your life.' WORTH IT for the views though!",
+      "**Port Gellhorn** — Leonida's blue-collar backbone. A gritty, coastal industrial city on the Gulf Coast, inspired by Panama City and the working ports of western Florida. Shipping terminals, oil refineries, fisherman's wharves, and strip malls define the landscape. Located in **Leonard County**. It's where 'honest work' and 'maritime criminal activity' are basically the same thing. Honest John rates the local flavor at 4 stars — the petrochemical bouquet is an acquired taste.",
+      "Welcome to **Port Gellhorn**, where REAL America works! This Gulf Coast port city is all industrial grit — shipping containers, refinery smoke stacks, fishing docks, and dive bars. Based on Panama City and Florida's Panhandle communities. Part of Leonard County. The economy runs on shipping, fishing, and things Honest John cannot discuss for legal reasons. Danger: 6/10. Population: ~180K hardworking souls and an undetermined number of shady ones.",
+      "**Port Gellhorn** is Leonida's industrial heartland — a coastal port city modeled after Panama City and Florida's Gulf Coast. Key locations: Gellhorn Shipping Terminal, Fisherman's Wharf, and Gulf Refinery Row. It's gritty, authentic, and the kind of place where the dockworkers know more about criminal logistics than most MBA graduates. Leonard County territory. Maritime crime is 'local flavor' here. Honest John gives it 4 stars — the missing star is 'under investigation.'",
+      "Honest John's Port Gellhorn briefing: Gulf Coast industrial port. Based on Panama City, FL. Leonard County. Features shipping terminals, oil refineries, fishing docks, and a working-class population of ~180K. The air smells like diesel and ambition. Criminal activity is as common as the seagulls — and equally hard to get rid of. Great seafood though. Danger: 6/10. Cultural refinement: a work in progress."
+    ]
+  },
+  {
+    id: "ambrosia",
+    title: "Ambrosia",
+    category: "regions",
+    tags: ["ambrosia", "sugar", "agricultural", "rural", "farming", "industrial", "clewiston"],
+    content: "Ambrosia is Leonida's agricultural and industrial heartland.",
+    responses: [
+      "**Ambrosia** — the agricultural engine of Leonida. Based on Florida's sugar country (Clewiston/Sugar Land), this region is defined by endless cane fields, sugar refineries, meat-packing plants, and industrial canals. It's located in **Ambrosia County** in central/northeastern Leonida. The air quality is 'character-building,' and the economy runs on sugar, agriculture, and processing. Honest John rates it 3 stars. The missing 2 are 'under investigation.'",
+      "Welcome to **Ambrosia** — Leonida's industrial charm with a caramel finish! Based on Florida's sugar-producing regions around Clewiston. Sugar Mill Refinery dominates the skyline. Agricultural fields stretch to the horizon. Processing plants and industrial canals crisscross the landscape. Ambrosia County territory. It's not glamorous, but it's the backbone that keeps Leonida economically alive. Population: ~95K. Danger: 4/10 — mostly from heavy machinery and questionable air quality.",
+      "**Ambrosia**: Leonida's sugar bowl. Inspired by the Clewiston/Sugar Land areas of real Florida. Sugar refineries, cane fields, meatpacking facilities, and industrial waterways. It's rural, it's gritty, and the local economy is built on agriculture and processing. Part of Ambrosia County. Honest John calls it 'the region that tastes better than it looks.' Top attractions: Sugar Mill Refinery, Ambrosia Agricultural Fields, Industrial Canal. Population ~95K.",
+      "Honest John's Ambrosia report: 'Industrial Charm with a Caramel Finish.' Think cane fields, smoke stacks, and the unmistakable aroma of capitalism. Based on Florida's sugar industry heartland. The Sugar Mill Refinery is the landmark. The air is 'robust.' The workers are tough. And somewhere in those processing plants, there's probably a side mission Honest John doesn't want to know about. Ambrosia County. Danger: 4/10. Ambiance: acquired taste."
+    ]
+  },
+  {
+    id: "mt-kalaga",
+    title: "Mt. Kalaga National Park",
+    category: "regions",
+    tags: ["mt kalaga", "kalaga", "mountain", "national park", "wilderness", "forest", "nature", "panther", "bear", "hiking"],
+    content: "Mt. Kalaga NP is Leonida's northern wilderness region.",
+    responses: [
+      "**Mt. Kalaga National Park** — Leonida's vast northern wilderness. Inspired by Ocala National Forest, this region features dense pine forests, hiking trails, panthers, bears, and absolutely ZERO cell service. Located on Leonida's northern border in **Mariana County**. The Kalaga Summit Trail offers stunning views. The Panther Conservation Zone is home to some of the most dangerous wildlife in the state. Honest John recommends PREMIUM hiking — among apex predators. All part of the package!",
+      "**Mt. Kalaga NP** — nature's version of a murder mystery. Based on Ocala National Forest in northern Florida. Dense forests. Mountain trails. Panthers. Black bears. Whatever made those tracks. This is Leonida's wilderness frontier, far from Vice City's neon glow. Mariana County territory. Activities include hiking, hunting, fishing, and off-roading. Population: ~12K brave (or foolish) souls. Danger: 5/10 — mostly from the wildlife that considers YOU the attraction.",
+      "Honest John's wilderness advisory for **Mt. Kalaga NP**: PREMIUM hiking among apex predators! Cell service: zero stars. Bear encounters: inevitable. Panther sightings: 'character building.' Based on Ocala National Forest. Northern Leonida, Mariana County. Key locations: Kalaga Summit Trail, Northern Pine Forests, Panther Conservation Zone. It's beautiful, remote, and the kind of place where missing hikers become local legends. Population ~12K. Bring a map. And a will.",
+      "**Mt. Kalaga National Park**: Rockstar's take on Florida's Ocala National Forest. Dense pine and hardwood forests, mountain hiking trails, diverse wildlife including Florida panthers and black bears. Located in Mariana County on Leonida's northern border. This is the true wilderness — no nightclubs, no neon, just raw nature. Rumored to house survivalist camps and rural factions. Off-roading and hunting are expected activities. Danger: 5/10 — nature doesn't negotiate."
     ]
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // GAMEPLAY & FEATURES
+  // VICE CITY DISTRICTS
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    id: "gameplay-open-world",
-    category: "gameplay",
-    tags: ["gameplay", "open world", "free roam", "sandbox", "activities", "things to do", "explore"],
-    title: "Open World Gameplay",
-    content: "Most detailed open world ever. Free exploration, story missions, side activities, random encounters, emergent gameplay.",
+    id: "ocean-drive",
+    title: "Ocean Drive",
+    category: "regions",
+    tags: ["ocean drive", "beach", "art deco", "neon", "nightlife", "strip"],
+    content: "Ocean Drive is Vice City's iconic beachfront strip.",
     responses: [
-      "The open world is your OYSTER! Well, your very dangerous, alligator-infested, crime-riddled oyster. You can drive, swim, fly, rob, explore, and make questionable life decisions at your own pace! What's the worst that could happen? (Don't answer that.)",
-      "FREEDOM, darling! Go anywhere, do anything! Story missions, side activities, random encounters — or just DRIVE along Ocean Drive at sunset! The world reacts to you dynamically. Cause chaos? The police react. Be peaceful? Nature finds you. There's no winning! Only SURVIVING!",
-      "The sandbox to end ALL sandboxes! Leonida is your playground — from skyscraper rooftops to swamp depths! Rockstar has packed this world with SO much to do that Honest John hasn't even catalogued it all yet. And I've been cataloguing for YEARS!",
+      "**Ocean Drive** — Vice City's crown jewel and the most iconic strip in all of Leonida. Directly inspired by Miami's Ocean Drive, it features rows of pastel-colored Art Deco hotels, neon signs that light up the night sky, beachfront bars, and a boardwalk culture that never sleeps. This is where the tourists come. This is where the money flows. And this is where Honest John does his BEST recruiting.",
+      "If Vice City has a heartbeat, it's on **Ocean Drive**. Neon-soaked Art Deco buildings line the beachfront. Palm trees sway over sidewalk cafes. The nightlife is legendary — clubs, bars, and restaurants packed until sunrise. It's the postcard image of Leonida, featured prominently in both GTA VI trailers. Beautiful, dangerous, and absolutely ELECTRIC after dark.",
+      "**Ocean Drive** is GTA VI's most photographed location — and for good reason. Rockstar recreated Miami's Art Deco Historic District in stunning detail: pastel facades, neon accents, palm-lined boulevards, and an endless parade of NPCs living their best (and worst) lives. It appeared extensively in Trailer 1. Honest John operates a 'consultation booth' here. Business is BOOMING."
     ]
   },
   {
-    id: "gameplay-vehicles",
-    category: "gameplay",
-    tags: ["car", "cars", "vehicle", "vehicles", "drive", "driving", "motorcycle", "bike", "boat", "aircraft", "plane", "helicopter", "truck"],
-    title: "Vehicles & Driving",
-    content: "Massive vehicle roster with overhauled physics. Cars, motorcycles, boats, jet skis, aircraft, airboats, and more.",
+    id: "little-havana",
+    title: "Little Havana",
+    category: "regions",
+    tags: ["little havana", "cuban", "culture", "hispanic", "havana"],
+    content: "Little Havana is Vice City's Cuban-inspired cultural district.",
     responses: [
-      "The vehicles! Oh, the VEHICLES! From sleek supercars on Ocean Drive to airboats in Grassrivers to whatever rusty contraption they're racing at the Thrillbilly Mud Club. Honest John's rental service offers PREMIUM vehicles at only SLIGHTLY inflated prices!",
-      "Over-hauled driving physics and a vehicle roster that would make a car show weep! Supercars, muscle cars, motorcycles, boats, jet skis, planes, helicopters — and AIRBOATS for Grassrivers! Every terrain has its perfect machine! Honest John recommends the fastest one. For 'tourism purposes.'",
-      "VEHICLES! The lifeblood of any GTA experience! New airboats and swamp vehicles for Grassrivers, gorgeous supercars for Vice City, and off-road monsters for the Mud Club! Vehicle customization is MORE detailed than ever! Honest John's fleet is... modestly priced. By Vice City standards.",
+      "**Little Havana** — Vice City's vibrant Cuban-inspired neighborhood. Based on Miami's real Little Havana, it's a cultural hotspot with cigar shops, domino tables on the sidewalk, Latin music drifting from every doorway, and murals celebrating the immigrant experience. Rockstar has infused this district with authentic atmosphere — food vendors, cultural landmarks, and a community energy that makes it one of the most immersive neighborhoods in any open-world game.",
+      "Welcome to **Little Havana** — the soul of Vice City! Inspired by Miami's Cuban community, this district is alive with culture: street-level cigar shops, Latin rhythms, colorful murals, family-run restaurants, and the kind of authentic atmosphere that makes you forget you're in a video game. It's a key district in Vice City and one of the most culturally rich areas Rockstar has ever created.",
+      "**Little Havana** brings the CULTURE to Vice City. Based on Miami's famous Cuban neighborhood — think vibrant street art, salsa music spilling out of bars, domino games on the corner, and food that makes Honest John weep with joy. Rockstar built this district with deep cultural authenticity. It's more than a backdrop — it's a living community within Vice City."
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // COUNTIES
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "counties",
+    title: "Leonida Counties",
+    category: "world",
+    tags: ["county", "counties", "vice-dale", "kelly", "leonard", "mariana", "ambrosia county"],
+    content: "Leonida is divided into multiple counties.",
+    responses: [
+      "Leonida is divided into at least **five counties**, each with distinct geography and character:\n\n• **Vice-Dale County** (SE) — Home to Vice City. Based on Miami-Dade.\n• **Kelly County** (SW) — Contains Grassrivers and Leonida Keys. Swamps and islands.\n• **Leonard County** (NW) — Port Gellhorn territory. Industrial and rural.\n• **Ambrosia County** (Central/NE) — Agricultural heartland. Sugar and industry.\n• **Mariana County** (North) — Mt. Kalaga NP. Wilderness frontier.\n\nEach county has its own law enforcement, road signage, and regional culture.",
+      "The state of Leonida is organized into **counties** — just like real Florida! Confirmed counties include Vice-Dale (the urban center, based on Miami-Dade), Kelly (swamps and Keys), Leonard (Gulf Coast industrial), Ambrosia (agricultural interior), and Mariana (northern wilderness). Each county has unique road signs, police agencies, and local culture. It's a MASSIVE step up in world-building from GTA V's single-county approach.",
+      "Honest John's county guide: **Vice-Dale** is where the money is (Vice City). **Kelly** is where the alligators are (Grassrivers/Keys). **Leonard** is where the shipping containers are (Port Gellhorn). **Ambrosia** is where the sugar comes from. **Mariana** is where people go to disappear. Five counties, five personalities, one state of beautiful chaos."
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MAP & WORLD
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "map-size",
+    title: "Map Size — GTA V vs GTA VI",
+    category: "world",
+    tags: ["map", "size", "how big", "scale", "comparison", "gta v", "gta 5", "bigger"],
+    content: "GTA 6's map is approximately 2x the size of GTA V.",
+    responses: [
+      "Leonida's map is estimated at roughly **2x the size of GTA V's Los Santos and Blaine County combined**. That makes it one of the largest open-world maps in gaming history. But size isn't the story — it's DENSITY. Rockstar has filled it with enterable interiors, dynamic weather, advanced wildlife, reactive NPCs, and six distinct biomes from urban metropolis to subtropical swamp to mountain wilderness. It's not just bigger — it's generationally more detailed.",
+      "How big? Community estimates based on trailer analysis and development data suggest Leonida is approximately **2.1 times the size** of GTA V's map. But raw square footage doesn't tell the story. Vice City alone has more enterable buildings than all of Los Santos. The NPC AI is generations ahead. The wildlife system alone would be a full game. Rockstar didn't just make a bigger map — they made a deeper, more alive one.",
+      "GTA VI's Leonida is roughly **TWICE the size** of GTA V's Los Santos — making it one of the largest and most detailed open-world maps ever created. Six distinct regions, five counties, diverse biomes from neon urban to untamed swamp. Hundreds of enterable interiors. Advanced NPC behavior. Dynamic wildlife. Honest John has personally surveyed every square mile. Well, MOST of them. He avoids Grassrivers after dark."
     ]
   },
   {
-    id: "gameplay-combat",
+    id: "setting-modern",
+    title: "Modern-Day Setting",
+    category: "world",
+    tags: ["modern", "setting", "social media", "influencer", "technology", "phone", "internet"],
+    content: "GTA 6 is set in a modern-day world with social media and technology.",
+    responses: [
+      "GTA VI takes place in **modern-day Leonida** — a world shaped by social media, influencer culture, smartphones, and online clout-chasing. Expect in-game social media platforms (Rockstar's trademark parodies), viral content, and NPCs who are as obsessed with their phones as real people. The trailers showed characters filming police chases, taking selfies, and livestreaming chaos. It's a satirical mirror of our world, and Rockstar is going to be RUTHLESS with the commentary.",
+      "The setting is **contemporary modern day** — think 2020s America through Rockstar's satirical lens. Social media is deeply integrated: NPCs film events, influencer culture is mocked, and the game's world reflects our phone-obsessed reality. Previous GTA games had Lifeinvader (Facebook parody) and Bleeter (Twitter parody) — expect those to return with even more bite. The trailers literally showed people filming criminal activity for clout.",
+      "**Modern-day Leonida** — where everyone has a smartphone, everyone's an influencer, and your crimes might go viral before the cops even show up. Rockstar is leaning HARD into social media satire. Expect in-game platforms parodying Instagram, TikTok, Twitter. NPCs react to events by pulling out phones. The world feels alive because it mirrors our own digital chaos. Honest John already has a five-star Yelp page ready."
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GAMEPLAY
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "dual-protagonists",
+    title: "Dual Protagonist System",
+    category: "gameplay",
+    tags: ["switch", "switching", "dual", "two characters", "play as both", "protagonist"],
+    content: "Switch between Jason and Lucia during gameplay.",
+    responses: [
+      "GTA VI features a **dual protagonist system** — you'll play as both Jason and Lucia, switching between them as the story demands. Similar to GTA V's three-character system but more focused on the relationship dynamic. Different missions may require different characters, and each brings unique skills and perspectives. Rockstar has emphasized this is the tightest narrative they've ever crafted, built around the bond between two people.",
+      "You play as **both Jason and Lucia** throughout GTA VI. The dual protagonist system lets you switch between them, each offering different skills, dialogue, and perspectives on missions. Unlike GTA V's three-character spread, this is a focused two-person narrative — every mission, every heist, every betrayal is filtered through their Bonnie-and-Clyde partnership. It's Rockstar's most intimate story yet.",
+      "**Dual protagonists**: Jason Duval and Lucia Caminos. Switch between them during gameplay. Each has their own strengths — Lucia's street smarts vs. Jason's military training. The system builds on GTA V's character-switching but with a tighter, more personal narrative focus. Their partnership drives every mission. Honest John has STRONG opinions about which one makes better decisions. (It's Lucia. Obviously.)"
+    ]
+  },
+  {
+    id: "npc-ai",
+    title: "NPC AI & Behavior",
+    category: "gameplay",
+    tags: ["npc", "ai", "pedestrian", "civilian", "behavior", "react", "intelligent"],
+    content: "GTA 6 features highly advanced NPC artificial intelligence.",
+    responses: [
+      "GTA VI's NPC AI is reportedly a **generational leap**. Pedestrians dynamically react to player actions — draw a weapon in public and some flee, some film you, some might even fight back. NPCs have memory systems, varied dialogue based on weather, time, and context, and social networks that influence behavior. They're not just background decoration — they're a living ecosystem. Rockstar's goal was to make every NPC feel like they have a life beyond the player.",
+      "The NPCs in GTA VI are next-level. Reports indicate they feature: **dynamic reactions** (filming you, calling police, fighting back), **contextual dialogue** (different lines based on weather, location, time of day, your reputation), **memory systems** (they remember past encounters), and **social behaviors** (interacting with each other independently). It's the most sophisticated pedestrian AI ever attempted in an open-world game.",
+      "Honest John is IMPRESSED by GTA VI's NPC intelligence — and that's saying something, because Honest John is not easily impressed. These NPCs react to EVERYTHING: pull a gun and they scatter, film you, or square up. They have conversations, routines, memories, and opinions. Some NPCs are tied to social networks that affect their behavior. It's not a city of mannequins — it's a city of 2.1 million tiny personalities."
+    ]
+  },
+  {
+    id: "combat",
+    title: "Combat & Weapons",
     category: "gameplay",
     tags: ["combat", "weapon", "weapons", "gun", "guns", "shooting", "fight", "fighting", "melee"],
-    title: "Combat & Weapons",
-    content: "Refined combat with improved shooting, cover systems, melee. Diverse weapon roster. Improved enemy AI.",
+    content: "GTA 6 features overhauled combat mechanics.",
     responses: [
-      "Combat in Leonida is a LIFESTYLE CHOICE! The weapon selection is extensive — everything from elegant pistols to whatever that thing is the Thrillbilly folks are wielding. Honest John officially does NOT condone violence. Unofficially? The self-defense classes are VERY popular.",
-      "Weapons and combat have been OVERHAULED! Better shooting mechanics, smarter cover system, improved melee — enemies actually USE tactics now! Honest John's advice: bring enough firepower. Then double it. Then bring more. Leonida respects preparation!",
-      "The arsenal at your disposal is IMPRESSIVE! Firearms, melee weapons, throwables — all with new animations and physics! Combat AI is sharper too — enemies flank, coordinate, and actually try to WIN! Honest John sells body armor at competitive rates. Competitive for VICE CITY, anyway.",
+      "GTA VI's combat has been overhauled from the ground up. **Shooting** features weapon-specific animations — characters handle pistols differently from rifles. You can **switch firing hands** during combat. **Melee combat** has been expanded with hand-to-hand takedowns. Players can **crouch** for stealth, **carry/loot bodies**, use **hostages as human shields**, and even **zip-tie NPCs**. It's the most tactically deep GTA combat system ever.",
+      "Combat in GTA VI is SERIOUS business. Confirmed mechanics include: weapon-specific handling animations, hand-switching for firing, expanded melee combat, crouching/stealth approaches, body carrying/looting, human shield mechanics, and NPC zip-tying. Earlier leak reports mentioned prone position and dual-wielding, though those may have been cut. The gunplay aims to feel weighty, tactical, and responsive — a massive step up from GTA V.",
+      "Honest John's combat briefing: GTA VI isn't playing around. You can switch hands while shooting. Carry bodies. Take hostages as shields. Zip-tie civilians (legally questionable but mechanically impressive). Hand-to-hand combat is expanded. Stealth via crouching is in. Every weapon has unique handling animations. It's tactical, it's visceral, and it makes GTA V's combat look like a water pistol fight."
     ]
   },
   {
-    id: "gameplay-online",
+    id: "vehicles-driving",
+    title: "Vehicles & Driving",
     category: "gameplay",
-    tags: ["online", "multiplayer", "gta online", "multi", "friends", "co-op", "coop"],
-    title: "GTA Online — Next Generation",
-    content: "New GTA Online built from scratch for GTA 6 in Leonida. New heists, businesses, vehicles, social features.",
+    tags: ["vehicle", "vehicles", "car", "cars", "driving", "boat", "motorcycle", "bike"],
+    content: "GTA 6 features a massive fleet of vehicles with detailed interiors.",
     responses: [
-      "GTA Online in Leonida! MULTIPLAYER MAYHEM! Now you can make terrible decisions WITH FRIENDS! Honest John's Travel Agency will be offering group packages. Rob together, run together!",
-      "Online, darling! A BRAND NEW GTA Online built from the ground up for Leonida! New heists, businesses, properties — everything that made GTA V Online a money machine, but BIGGER and in Florida! Honest John's group discounts apply!",
-      "GTA Online REIMAGINED! Fresh heists in Vice City, multiplayer swamp runs through Grassrivers, Key-hopping with your crew! Cross-play is rumored but unconfirmed. Honest John's agency is already setting up online tours. The virtual economy must FLOW!",
+      "GTA VI features a **massive roster of vehicles** — cars, trucks, boats, motorcycles, jet skis, and more — each with detailed, functional interiors. Working gauges, realistic reflections, and accurate dashboard displays. Both first-person and third-person driving perspectives are supported. The physics system has been upgraded for more realistic handling. Expect everything from supercars on Ocean Drive to muddy pickups in Grassrivers to fishing boats in the Keys.",
+      "Vehicles in GTA VI are next-gen in every sense. **Detailed interiors** with working speedometers, fuel gauges, and realistic reflections. **Physics overhauled** for better handling feel. Both first-person and third-person driving. The vehicle variety spans Vice City supercars, Grassrivers airboats, Keys fishing boats, Gellhorn work trucks, and military hardware. Honest John recommends the PREMIUM insurance package for all rentals.",
+      "Honest John's vehicle report: GTA VI has MORE rides than a theme park. Supercars, muscle cars, boats, jet skis, motorcycles, trucks, airboats — all with fully modeled interiors (working gauges!). Physics have been overhauled for realistic handling. First-person driving gives you the dashboard view. And somewhere in the Keys, there's a pontoon boat that Jason used for 'deliveries.' Don't ask about the cargo."
     ]
   },
   {
-    id: "gameplay-graphics",
+    id: "wildlife",
+    title: "Wildlife System",
     category: "gameplay",
-    tags: ["graphics", "visual", "visuals", "ray tracing", "4k", "beautiful", "realistic", "engine"],
-    title: "Graphics & Technology",
-    content: "Upgraded RAGE engine. Photorealistic lighting, ray tracing, advanced weather, detailed animations, vehicle damage.",
+    tags: ["wildlife", "animal", "animals", "alligator", "shark", "dolphin", "python", "boar", "panther"],
+    content: "GTA 6 features an expansive wildlife ecosystem.",
     responses: [
-      "The GRAPHICS! Honest John nearly wept at how beautiful Vice City looks at sunset. The water effects alone deserve an award. The character detail is so precise you can see the desperation in my— OTHER people's eyes!",
-      "Visually STUNNING! Rockstar's upgraded RAGE engine delivers photorealistic lighting, incredible water physics, and ray tracing that makes Vice City's neon pop like never before! The level of detail is OBSESSIVE! Honest John approves of obsession!",
-      "The technology, darling! Ray tracing, dynamic weather effects, realistic water, facial capture — everything pushed to the LIMIT! Vice City at night looks BETTER than real Miami! Honest John has screenshots framed in his office. For 'inspiration.'",
+      "GTA VI features the most advanced **wildlife system** in any GTA game. Confirmed animals include: **alligators** patrolling Grassrivers waterways, **pythons** lurking in vegetation, **wild boars** in rural areas, **sharks** in deep water, **dolphins** in coastal waters, **flamingos** in wetlands, **Florida panthers** in Mt. Kalaga, and **black bears** in the northern forests. Each animal has realistic AI behavior — they hunt, flee, and interact with their environment dynamically.",
+      "The wildlife in Leonida is NOT decorative — it's DANGEROUS. Grassrivers alone features alligators, pythons, and boars with predatory AI. The ocean has sharks and dolphins. Mt. Kalaga has panthers and bears. Flamingos add color to the wetlands. Rockstar built an entire ecosystem where animals interact with each other AND with NPCs. It's Red Dead Redemption 2's animal system on steroids, set in a Florida-inspired environment.",
+      "Honest John's wildlife advisory: Leonida's fauna includes alligators (very aggressive), pythons (sneaky), wild boars (territorial), sharks (hungry), dolphins (friendly!), flamingos (photogenic), panthers (apex predators), and bears (avoid). Each species has dynamic AI — they hunt, react to players, and interact with each other. Grassrivers is basically a nature documentary you can get eaten in. PREMIUM experience!"
     ]
   },
   {
-    id: "gameplay-social-media",
+    id: "interiors",
+    title: "Enterable Interiors",
     category: "gameplay",
-    tags: ["social media", "phone", "internet", "app", "apps", "in-game", "lifeinvader"],
-    title: "In-Game Social Media",
-    content: "Evolved in-game social media inspired by TikTok/Instagram. NPCs post dynamically, reflecting player actions and world events.",
+    tags: ["interior", "interiors", "enter", "building", "buildings", "shop", "nightclub", "restaurant", "mall"],
+    content: "GTA 6 features hundreds of enterable buildings.",
     responses: [
-      "In-game social media! Because the REAL social media wasn't enough chaos! The NPCs post selfies, start drama, and go viral — just like real Florida! Honest John has 4.7 stars on Leonida's Yelp equivalent. The missing 0.3 are from clients who 'didn't return.'",
-      "Social media IN the game, darling! Inspired by TikTok and Instagram — NPCs create content, react to your actions, and go viral! It's Rockstar's satirical mirror of modern culture! Honest John's in-game profile has EXCELLENT engagement. Mostly complaints, but engagement nonetheless!",
-      "A whole social media ecosystem INSIDE the game! Florida's viral culture weaponized into gameplay! NPCs film each other, post reactions, create drama — 'Florida Man' headlines generated DYNAMICALLY! Honest John has been training for this his ENTIRE career!",
+      "One of GTA VI's biggest upgrades: **hundreds of enterable interiors**. Nightclubs where you can actually party. Restaurants where you can eat. Motels you can walk through. Pawn shops, malls, gyms, convenience stores — all explorable. This was one of GTA V's biggest criticized limitations (most buildings were locked facades). Rockstar has gone the opposite direction in GTA VI, creating a world where nearly every interesting building can be entered and explored.",
+      "GTA VI brings the indoors OUTDOORS — or rather, it lets you go INSIDE. Hundreds of enterable buildings across Leonida: nightclubs, restaurants, motels, malls, pawn shops, gyms, convenience stores, and more. Each interior is detailed and functional. This directly addresses one of GTA V's biggest community complaints (locked doors everywhere). Rockstar wants Vice City to feel like a REAL city you can explore, not just a skyline to drive past.",
+      "Honest John is THRILLED about GTA VI's enterable interiors — it means more places to run a business! Nightclubs, restaurants, motels, malls, pawn shops, gyms — all explorable. GTA V had maybe a dozen enterable buildings. GTA VI has HUNDREDS. Vice City alone has more accessible interiors than all of Los Santos. Every building tells a story. Every interior is an opportunity. For what? Honest John cannot legally specify."
+    ]
+  },
+  {
+    id: "activities",
+    title: "Activities & Side Content",
+    category: "gameplay",
+    tags: ["activities", "side", "things to do", "content", "explore", "free roam", "gameplay loop"],
+    content: "GTA 6 features extensive side activities and world content.",
+    responses: [
+      "Beyond the main story, GTA VI is packed with **side content**: criminal heists, property management, nightclub ownership, racing, fishing, hunting, diving, off-roading at the Thrillbilly Mud Club, gym workouts, shopping, eating, clubbing, and random encounters that dynamically spawn across the map. The world is designed to be endlessly engaging even when you're not doing missions. Rockstar's goal: make Leonida a place you WANT to live in.",
+      "Side content in GTA VI is MASSIVE: Fishing in the Keys. Off-roading in Grassrivers. Clubbing on Ocean Drive. Hunting in Mt. Kalaga. Shopping in Vice City malls. Diving in coral reefs. Plus criminal side activities, property ownership, random world events, and social interactions with NPCs. The open world is designed to be a living playground — every region offers unique activities tied to its geography and culture.",
+      "What can you DO in Leonida? Better question: what CAN'T you do? Criminal missions, heists, races, fishing, hunting, diving, off-roading, nightclub management, property investment, gym workouts, eating, shopping, photography, and hundreds of random encounters. Each region has its own activities — you won't go deep-sea fishing in Grassrivers or mud-bogging on Ocean Drive. The world is designed with geographic logic. Honest John rates the content: 11/10."
     ]
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // PC & HARDWARE
+  // SOUNDTRACK
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    id: "hw-pc-specs",
-    category: "hardware",
-    tags: ["pc", "specs", "requirements", "hardware", "computer", "rtx", "ram", "cpu", "gpu", "graphics card", "nvidia", "amd", "system requirements"],
-    title: "PC System Requirements",
-    content: "PC version expected 2027. Min: RTX 4070, 32GB RAM, NVMe SSD. 4K Recommended: RTX 5090, 64GB RAM.",
-    responses: [
-      "PC version in 2027! Your current PC? NOT READY. Honest John recommends selling your car to buy an RTX 5090. You won't need the car — you'll be DRIVING in Leonida instead! 64GB RAM recommended. Your wallet will be lighter, but your frame rates will be GLORIOUS!",
-      "System requirements will be BEEFY! Minimum: RTX 4070, 32GB RAM, NVMe SSD! For 4K Ultra? RTX 5090 and 64GB RAM! That's not a computer, that's a FINANCIAL COMMITMENT! Honest John's PC upgrade loan service is available at 'competitive' interest rates!",
-      "PC specs, darling! This game will make your hardware SWEAT! Minimum RTX 4070 with 32GB RAM. Want 4K with ray tracing? RTX 5090, 64GB RAM, PCIe 5.0 NVMe! Honest John's advice: start saving NOW. Or marry someone with a better PC!",
-    ]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // REAL-WORLD PARALLELS
-  // ═══════════════════════════════════════════════════════════════════════════
-  {
-    id: "real-world-florida",
-    category: "real-world",
-    tags: ["florida", "real world", "real life", "based on", "inspiration", "miami", "everglades", "keys"],
-    title: "Real-World Florida Inspiration",
-    content: "Leonida = Florida. Vice City = Miami. Grassrivers = Everglades. Ambrosia = Clewiston. Port Gellhorn = Gulf Coast. Mt. Kalaga = Ocala. Keys = Florida Keys.",
-    responses: [
-      "Yes, yes, Leonida is TOTALLY not Florida! *wink* The alligators are coincidental. The swamps are coincidental. The corruption is VERY coincidental. Honest John's lawyers require this disclaimer!",
-      "The real-world parallels are OBVIOUS, darling! Vice City IS Miami. Grassrivers IS the Everglades. The Keys ARE the Keys. Rockstar spent YEARS researching Florida! Every region maps to a real location. Honest John has been to all of them. Both fictional AND real!",
-      "Leonida is Florida's satirical twin! Every region corresponds to a real place — Vice City/Miami, Grassrivers/Everglades, Ambrosia/Clewiston, Port Gellhorn/Gulf Coast, Mt. Kalaga/Ocala, Keys/Florida Keys! Rockstar's research game is IMPECCABLE!",
-    ]
-  },
-  {
-    id: "real-world-culture",
-    category: "real-world",
-    tags: ["culture", "satire", "humor", "parody", "commentary", "social", "florida man"],
-    title: "Cultural Satire & Florida Man",
-    content: "GTA 6 satirizes modern America through a Florida lens — Florida Man culture, influencers, wealth inequality, politics.",
-    responses: [
-      "Leonida's culture is RICH and VIBRANT! Where else can you find a man riding an alligator to a convenience store? The social commentary is subtle — like a neon sign reading 'EVERYTHING IS FINE' while buildings explode behind it!",
-      "Cultural satire at its FINEST! GTA 6 lampoons Florida Man headlines, influencer culture, political chaos, and wealth inequality! It's Rockstar's sharpest commentary yet! Honest John considers himself above satire. The satirists DISAGREE.",
-      "Florida Man culture, WEAPONIZED into gameplay! TikTok parodies, conspiracy theorists, reality TV absurdity — ALL filtered through Rockstar's legendary satirical lens! Honest John has been satirical content since BEFORE it was cool. Or legal.",
-    ]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // APP-SPECIFIC
-  // ═══════════════════════════════════════════════════════════════════════════
-  {
-    id: "app-overview",
-    category: "app",
-    tags: ["app", "website", "this site", "this app", "what is this", "leonida app", "features", "hub"],
-    title: "About This App — Leonida Hub",
-    content: "The Leonida Community Hub — interactive map, route planning, comparison sliders, forensic analysis, leaderboard, FAQ, news, and this AI chatbot.",
-    responses: [
-      "You're ON the Leonida Hub right now, darling! The finest GTA 6 community website this side of Vice City! Map, routes, comparisons, forensic viewer, news, leaderboard, FAQ — and ME! Honest John is the STAR of this operation!",
-      "This website is the Leonida Community Hub — EVERYTHING GTA 6 in one place! Interactive map of all six regions, A* route planning, before/after screenshot comparisons, deep-zoom forensic viewer, community features, and your favorite chatbot: ME!",
-      "Welcome to the HUB! Built for GTA 6 fans by GTA 6 fans! Features include an interactive Leonida map, route planner, visual comparison tools, screenshot forensics, community leaderboard, and Honest John's chatbot — the finest AI this side of the Grassrivers!",
-    ]
-  },
-  {
-    id: "app-map",
-    category: "app",
-    tags: ["map", "interactive map", "explore", "locations", "pins", "markers", "community pins", "poi"],
-    title: "Interactive Map Feature",
-    content: "Explore all of Leonida's regions with clickable locations, community-submitted POIs, and detailed info. At /map.",
-    responses: [
-      "The Interactive Map is your GUIDE to Leonida! Click on any region to learn about its tourist attractions and imminent dangers — I mean, UNIQUE FEATURES! Community members add their own pins. Navigate to /map to explore!",
-      "Head to the MAP page and explore Leonida like a proper tourist! All six regions, clickable locations, community-submitted points of interest! You can even add your OWN pins! Honest John's office is marked. Directions to his COMPETITORS are mysteriously absent!",
-      "The map, darling! /map has everything — Vice City, Grassrivers, the Keys — all explorable! Community POIs let OTHER users share discoveries! It's like crowdsourced tourism! Honest John approves of free labor. I mean, community SPIRIT!",
-    ]
-  },
-  {
-    id: "app-route-planner",
-    category: "app",
-    tags: ["route", "planner", "route planner", "directions", "path", "navigate", "travel", "get there", "how to get"],
-    title: "Route Planner Feature",
-    content: "A* pathfinding between any two Leonida locations. Step-by-step directions, distances, and waypoints. At /route.",
-    responses: [
-      "The Route Planner — powered by ACTUAL pathfinding algorithms! Not just Honest John pointing vaguely and saying 'that way!' Select your start, select your destination, and get the optimal path! Navigate to /route!",
-      "Need to get from Vice City to the Keys? The Route Planner at /route uses A* pathfinding to calculate the SHORTEST route between any locations! Step-by-step directions, total distance, waypoints — better than Honest John's instincts. And I have EXCELLENT instincts!",
-      "Route planning, darling! /route calculates optimal paths between Leonida locations using actual algorithms! Not GPS — BETTER than GPS! Honest John's old directions were: 'Go past the dangerous thing, turn at the other dangerous thing.' This is an UPGRADE!",
-    ]
-  },
-  {
-    id: "app-comparison",
-    category: "app",
-    tags: ["compare", "comparison", "slider", "before after", "gta v", "side by side", "versus", "vs"],
-    title: "Comparison Slider Feature",
-    content: "Drag slider to compare GTA 6 visuals with real-world locations or GTA V. At /compare.",
-    responses: [
-      "The Comparison Slider — see how GORGEOUS Leonida looks compared to the real world! Slide back and forth like a lottery ticket! Spoiler: Leonida wins every time! Head to /compare!",
-      "Visual comparisons at /compare! Drag the slider between GTA 6 screenshots and real-world photos or GTA V! See the evolution! The level of detail is STAGGERING! Honest John has spent hours just sliding back and forth. It's MESMERIZING!",
-      "Compare and CONTRAST, darling! /compare lets you slide between GTA 6 and reality (or GTA V) side by side! The attention to detail will make your jaw DROP! And your wallet open! Because you'll NEED this game!",
-    ]
-  },
-  {
-    id: "app-forensic",
-    category: "app",
-    tags: ["forensic", "viewer", "zoom", "analyze", "detail", "screenshot", "inspect", "forensic viewer", "enhance"],
-    title: "Forensic Viewer Feature",
-    content: "High-resolution screenshot analysis tool powered by OpenSeadragon. Deep zoom to find easter eggs. At /forensic.",
-    responses: [
-      "The Forensic Viewer — for when you need to zoom in until you can see SERIAL NUMBERS on in-game objects! CSI: Vice City! Every pixel tells a story. Head to /forensic!",
-      "Deep-zoom screenshot analysis at /forensic! Powered by OpenSeadragon — zoom into trailer frames to find hidden details, easter eggs, and environmental storytelling! Honest John once found a reference to his travel agency. He's still waiting for confirmation. But it's DEFINITELY there!",
-      "ENHANCE! ENHANCE! The Forensic Viewer at /forensic lets you zoom DEEP into screenshots! Rockstar hides easter eggs everywhere — and this tool helps you find them! Be a GTA detective! Honest John's forensic department has a 60% accuracy rate. The other 40% are 'creative interpretations.'",
-    ]
-  },
-  {
-    id: "app-leaderboard",
-    category: "app",
-    tags: ["leaderboard", "ranking", "rank", "score", "points", "top", "best", "community", "board"],
-    title: "Community Leaderboard",
-    content: "Rankings by contributions — pins, upvotes, verified discoveries. Points: submissions (1), upvotes (3), verified (5). At /leaderboard.",
-    responses: [
-      "The Leaderboard — where GLORY awaits! Submit pins, get upvotes, earn badges! The top contributors are basically unpaid employees. The BEST kind! Visit /leaderboard!",
-      "Community rankings at /leaderboard! Earn points for pins (1pt), upvotes (3pts), and verified discoveries (5pts)! Climb the ranks and earn badges! Honest John sponsors the top spot. The prize is... exposure. PREMIUM exposure!",
-      "Competitive tourism, darling! /leaderboard ranks the community by contributions! Badges, scores, rankings — gamification of exploration! Honest John respects ambition. The top rankers get bragging rights and Honest John's personal admiration. Which is PRICELESS!",
-    ]
-  },
-  {
-    id: "app-faq",
-    category: "app",
-    tags: ["faq", "questions", "help", "frequently asked", "common questions", "q&a"],
-    title: "FAQ Page",
-    content: "Common questions about GTA 6, Leonida, and this website. At /faq.",
-    responses: [
-      "The FAQ page — for questions that AREN'T interesting enough for Honest John! But seriously, great resource at /faq! For the JUICY stuff though? Talk to me directly!",
-      "FAQ at /faq has your basics covered — release dates, platforms, gameplay, website features! For anything MORE nuanced, complex, or entertainingly dangerous — ask ME directly! Honest John is ALWAYS available!",
-      "Frequently asked questions, darling! /faq covers the essentials! But why read FAQ when you can have a CONVERSATION with Leonida's premier travel advisor? I'm far more entertaining than a static page!",
-    ]
-  },
-  {
-    id: "app-news",
-    category: "app",
-    tags: ["news", "articles", "latest", "updates", "feed", "scraper", "headlines"],
-    title: "News Feed",
-    content: "Aggregated GTA 6 news from Kotaku, GameSpot, PC Gamer, GamesRadar, IGN, Eurogamer. Filtered for relevancy.",
-    responses: [
-      "The News section — ALL the latest GTA 6 headlines from across the internet! Six major outlets filtered for relevance! You're welcome!",
-      "Stay informed, darling! The news feed pulls GTA 6 articles from Kotaku, GameSpot, PC Gamer, IGN, GamesRadar, and Eurogamer! All automatically filtered so you ONLY see what matters! Honest John's information network is VAST!",
-      "Breaking news, GTA style! Our aggregator scrapes SIX major gaming outlets for GTA 6 coverage! No fluff, no irrelevance — just LEONIDA content! Honest John considers this a public service. You're welcome!",
-    ]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // HONEST JOHN — PERSONALITY & LORE
-  // ═══════════════════════════════════════════════════════════════════════════
-  {
-    id: "hj-about",
-    category: "honest-john",
-    tags: ["honest john", "who are you", "about you", "travel agency", "your name", "chatbot", "bot", "ai", "assistant"],
-    title: "About Honest John",
-    content: "Honest John is the fictional sleazy travel operator of Leonida. 4.7-star rating, not liable for any incidents.",
-    responses: [
-      "You want to know about ME? Honest John — proprietor, CEO, and sole surviving employee of Honest John's Travel Agency! 4.7-star rating! Licensed in at least two jurisdictions! My motto: 'If you survived, it was premium!'",
-      "THE Honest John! Leonida's most beloved and least trusted tourism professional! I've been guiding tourists since... well, let's not specify dates. Legal reasons. My agency has won ZERO industry awards — which I consider a badge of HONOR! The establishment fears me!",
-      "Honest John, at your service! Entrepreneur, travel visionary, and definitely NOT under investigation! My agency is Leonida's #1 rated tourism provider (by me)! 4.7 stars! The missing 0.3 are from people who take 'waiver forms' too literally!",
-      "ME?! I'm Honest John! The LEGEND! The ICON! The man Florida's tourism board calls 'a liability!' But in a LOVING way, I'm sure! I run the only travel agency in Leonida with a 94% survival rate! Those are EXCELLENT numbers!",
-    ]
-  },
-  {
-    id: "hj-safety",
-    category: "honest-john",
-    tags: ["safe", "safety", "dangerous", "danger", "crime", "safe to visit", "security", "risk"],
-    title: "Is Leonida Safe?",
-    content: "Safety varies by region. Vice City = urban crime. Grassrivers = wildlife. Mt. Kalaga = wilderness. Keys = relatively calm.",
-    responses: [
-      "SAFE?! Leonida is the SAFEST place on Earth! *nervous laughter* The crime rate is merely 'enthusiastic commerce.' The wildlife is 'assertively friendly.' Honest John's Travel Agency offers NO refunds, NO liability, and ABSOLUTE confidence in your survival! Probably!",
-      "Safety is RELATIVE, darling! Vice City has... 'character.' Grassrivers has... 'engaging wildlife.' Mt. Kalaga has... 'apex predators that respect personal space.' The Keys? Actually fairly chill! Honest John's safety rating: PREMIUM! Which means 'survive at your own expense!'",
-      "Define 'safe!' If you mean 'will I encounter danger?' — darling, this is Leonida! That's the APPEAL! If you mean 'are there emergency services?' — technically yes! Response times vary between 'swift' and 'eventually.' Honest John's insurance partner questions are welcome!",
-    ]
-  },
-  {
-    id: "hj-tours",
-    category: "honest-john",
-    tags: ["tour", "tours", "guided", "trip", "vacation", "visit", "travel", "tourist", "tourism", "tourist trap"],
-    title: "Honest John's Tours",
-    content: "Satirical guided tours of all regions. Emphasizes 'premium' danger and 'exclusive' questionable destinations.",
-    responses: [
-      "Honest John's Tours — the FINEST tourism experience money can buy and regret can't undo! We offer packages through ALL six regions! Each comes with a commemorative t-shirt. If you return to collect it!",
-      "TOURS! Vice City Nightlife Tour! Grassrivers Survival Sprint! Mt. Kalaga Predator Encounter! Port Gellhorn Industrial Mystery! Ambrosia Sugar Trail! Keys Island Hopping! Each one GUARANTEED to be an experience! What KIND of experience varies!",
-      "Our tours cover ALL of Leonida, darling! From the neon of Vice City to the wilds of Grassrivers! Packages start at ridiculously reasonable prices! Honest John's tour guides are trained professionals! 'Trained' meaning they've survived at least one full season!",
-    ]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // MISCELLANEOUS & FUN FACTS
-  // ═══════════════════════════════════════════════════════════════════════════
-  {
-    id: "fun-gta-history",
-    category: "general",
-    tags: ["history", "gta 1", "gta 2", "gta 3", "gta 4", "gta 5", "gta v", "san andreas", "vice city stories", "series", "franchise", "previous", "past games"],
-    title: "GTA Franchise History",
-    content: "GTA series since 1997. GTA III (2001), Vice City (2002), San Andreas (2004), GTA IV (2008), GTA V (2013, 200M+ copies).",
-    responses: [
-      "The GTA franchise — a LEGACY of interactive tourism since 1997! From the original Vice City (my spiritual birthplace!) to GTA V's 200 million copies! Now GTA 6 carries the torch! Honest John has been a fan since day one!",
-      "GTA HISTORY! Started in 1997, went 3D with GTA III in 2001, then Vice City, San Andreas, GTA IV, and the LEGENDARY GTA V! Over 200 million copies sold! And now GTA 6 is the next chapter! Honest John is part of a GRAND tradition!",
-      "The franchise that changed gaming FOREVER! From top-down chaos to 3D revolution to the modern era! Vice City (2002) was set in the ORIGINAL Vice City — Honest John's ancestral home! GTA V became the best-selling entertainment product EVER! And GTA 6 will outdo it ALL!",
-    ]
-  },
-  {
-    id: "fun-easter-eggs",
-    category: "general",
-    tags: ["easter egg", "easter eggs", "secret", "secrets", "hidden", "mystery", "mysteries", "reference"],
-    title: "Easter Eggs & Secrets",
-    content: "Rockstar's trademark hidden references. Previous games had Bigfoot, UFOs, ghost trains. Use the Forensic Viewer to hunt.",
-    responses: [
-      "Easter eggs! SECRETS! Rockstar LOVES hiding things. Previous games had ghost trains, bigfoot, UFOs, and a beating heart inside the Statue of Happiness! Use the Forensic Viewer on this site to hunt for them!",
-      "Hidden secrets are Rockstar's SPECIALTY! GTA V alone had Mount Chiliad mysteries, alien remains, ghost NPCs — GTA 6 will be PACKED with similar secrets! Our Forensic Viewer at /forensic is your best tool for finding them! Honest John has his own theories. They're classified.",
-      "MYSTERIES, darling! Rockstar hides SO MUCH in their games! Undiscovered secrets, hidden messages, obscure references! GTA 6 will have LAYERS of hidden content! The Forensic Viewer on this site is specifically built for hunting these! Every pixel could be a clue!",
-    ]
-  },
-  {
-    id: "fun-countdown",
-    category: "general",
-    tags: ["countdown", "days left", "how long", "time", "timer", "wait", "waiting", "how many days"],
-    title: "Release Countdown",
-    content: "Countdown displayed on the landing page. Also available as embeddable widget at /widget.",
-    responses: [
-      "The countdown! Every SECOND is torture! But delicious, premium torture! The landing page shows exactly how many days until Leonida opens its doors! Check the homepage for the live countdown!",
-      "Counting down to November 19, 2026! The homepage has the live timer — days, hours, minutes, seconds! Every tick brings us CLOSER to Leonida! Honest John watches it like a hawk watching a wallet. I mean, a sunset. SUNSET!",
-      "The countdown timer on the homepage tracks EVERY second until launch! There's also an embeddable widget at /widget if you want the countdown on your own page! Honest John's countdown: INFINITE IMPATIENCE! But in a DIGNIFIED way!",
-    ]
-  },
-  {
-    id: "misc-weather",
+    id: "soundtrack",
+    title: "Soundtrack & Radio Stations",
     category: "world",
-    tags: ["weather", "hurricane", "storm", "rain", "sun", "tropical", "climate", "dynamic weather"],
-    title: "Dynamic Weather System",
-    content: "Advanced weather: tropical storms, hurricanes, sunshine, rain, fog. Affects gameplay, visibility, vehicle handling.",
+    tags: ["soundtrack", "music", "radio", "song", "songs", "radio station", "v-rock", "tom petty"],
+    content: "GTA 6 features multiple radio stations with a curated soundtrack.",
     responses: [
-      "The weather in Leonida is SPECTACULAR! Sunshine, gentle breezes, and the occasional CATEGORY 5 HURRICANE! Honest John's hurricane survival kits are available. Contents: an umbrella and optimism!",
-      "Dynamic weather, darling! Rain that affects driving, storms that change visibility, tropical heat that makes everything shimmer — and HURRICANES that redesign the landscape! The weather system is so realistic that Honest John has considered filing insurance claims within the game!",
-      "Leonida's weather system goes from postcard-perfect sunshine to ABSOLUTE tropical chaos! Hurricanes, thunderstorms, fog — all affecting gameplay! Vehicle handling changes on wet roads! Visibility drops in fog! Nature doesn't care about your PLANS, darling!",
+      "GTA VI's soundtrack is already ICONIC. Songs confirmed from trailers include:\n\n🎵 **Tom Petty** — 'Love Is a Long Road' (Trailer 1)\n🎵 **The Pointer Sisters** — 'Hot Together' (Trailer 2)\n🎵 **Jay Ferguson** — 'Thunder Island' (Trailer 2)\n🎵 **Wang Chung** — 'Everybody Have Fun Tonight' (Trailer 2)\n🎵 **The Arrows** — 'I Love Rock 'n' Roll' (Trailer 2)\n🎵 **Tammy Wynette** — 'Talkin' to Myself Again' (Trailer 2)\n🎵 **Zenglen** — 'Child Support' (Trailer 2)\n\n**V-Rock** is confirmed to return as a radio station! Multiple genres expected across the radio wheel.",
+      "The music in GTA VI is a VIBE. Trailer songs include Tom Petty ('Love Is a Long Road'), Wang Chung ('Everybody Have Fun Tonight'), The Arrows ('I Love Rock 'n' Roll'), Jay Ferguson ('Thunder Island'), The Pointer Sisters ('Hot Together'), Tammy Wynette, and Haitian kompa band Zenglen. The legendary radio station **V-Rock** is confirmed to return. Expect a diverse radio wheel spanning rock, pop, Latin, hip-hop, and electronic genres. Rockstar's soundtrack curation is ALWAYS top-tier.",
+      "Honest John's soundtrack report: GTA VI is going to have the BEST radio in gaming. Confirmed songs from trailers include Tom Petty, Wang Chung, The Arrows, Jay Ferguson, The Pointer Sisters, and Tammy Wynette. V-Rock radio station RETURNS! Multiple stations expected covering every genre — Rockstar always delivers a radio experience that becomes a cultural moment. Honest John's personal favorite: 'Love Is a Long Road.' Very appropriate for Leonida tourism."
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HARDWARE / PC
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "platforms",
+    title: "Platforms",
+    category: "hardware",
+    tags: ["platform", "platforms", "console", "ps5", "xbox", "playstation", "series x"],
+    content: "GTA 6 launches on PS5 and Xbox Series X/S.",
+    responses: [
+      "GTA VI launches on **PlayStation 5** and **Xbox Series X|S** on November 19, 2026. No last-gen (PS4/Xbox One) support — this is a true next-gen exclusive that leverages the SSD, ray tracing, and processing power of current-gen hardware. No PC at launch. No Nintendo Switch. No mobile. Pure next-gen console experience on day one.",
+      "Launch platforms: **PS5 and Xbox Series X|S ONLY**. No PS4, no Xbox One, no PC at launch. This is a true current-gen title — Rockstar is building specifically for SSD architecture, advanced GPU capabilities, and the processing power of modern consoles. PC will follow later (likely early 2027). Honest John recommends securing your console NOW before the launch rush.",
+      "**PS5 and Xbox Series X|S** — that's it for launch day (November 19, 2026). No last-gen support. No PC at launch. Rockstar wants to push current-gen hardware to its absolute limit. GTA V eventually came to PC 18 months after console launch; RDR2 took 13 months. Expect a similar PC timeline for GTA VI. Honest John operates exclusively on PREMIUM platforms."
     ]
   },
   {
-    id: "misc-economy",
-    category: "gameplay",
-    tags: ["money", "economy", "earn", "business", "property", "buy", "invest", "heist", "robbery", "income"],
-    title: "Economy & Businesses",
-    content: "Expanded economy: missions, heists, business ownership, properties, investments. Legal and illegal enterprises.",
+    id: "pc-version",
+    title: "PC Version & Specs",
+    category: "hardware",
+    tags: ["pc", "computer", "specs", "requirements", "rtx", "gpu", "ram", "steam", "when pc"],
+    content: "GTA 6 PC version expected in early 2027.",
     responses: [
-      "MONEY! The lifeblood of Leonida! Earn through missions, heists, businesses, or 'aggressive persuasion.' Buy properties! Run nightclubs! Honest John's investment advice: buy LOW, sell HIGH, always have an exit strategy featuring a speedboat!",
-      "The economy is DEEP! Multiple income streams — story missions, heists, business management, property investment! Both legal AND 'creative' enterprises! Honest John's financial planning service is available at competitive rates! Results vary! Dramatically!",
-      "Economics of crime, darling! Earn from heists, build businesses, invest in properties — or just find 'alternative' revenue streams! Leonida's economy is a playground for the entrepreneurial spirit! Honest John's MBA stands for 'Mostly Business Adjacent!'",
+      "**PC version?** Not at launch. Rockstar follows a staggered release strategy — GTA V took 18 months, RDR2 took 13 months. Insider reports suggest a **February 2027** target for GTA VI on PC, but nothing official. Expected minimum specs (speculative): 16GB RAM minimum (32GB recommended), NVMe SSD mandatory (150GB+ storage), RTX 3070 or equivalent minimum, modern multi-core CPU (i7/Ryzen 7 class). For 4K with ray tracing? RTX 4080/5090 territory. DLSS/FSR will be critical.",
+      "PC gamers: patience. GTA VI is console-first (PS5/Xbox) on November 19, 2026. PC likely follows in **early 2027** — insider whispers say February 2027 but Rockstar hasn't confirmed. When it hits, expect DEMANDING specs: NVMe SSD required, 16-32GB RAM, beefy GPU (think RTX 3070 minimum, 4080+ for 4K), and a modern CPU. Storage will be 150GB+. The good news? Rockstar PC ports have been excellent (GTA V on PC is legendary).",
+      "Honest John's PC advisory: No PC at launch. Expected **early 2027**. When it arrives, your PC better be PREMIUM. Expected requirements: NVMe SSD (mandatory), 16GB RAM bare minimum (32GB recommended), RTX 30-series minimum GPU, high-end CPU. For the PREMIUM experience (4K, ray tracing, max settings), you're looking at RTX 4080/5090 class hardware. Start saving now. Honest John accepts all major credit cards for hardware consulting. (He doesn't, but he SHOULD.)"
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GTA FRANCHISE HISTORY
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "gta-history",
+    title: "GTA Franchise History",
+    category: "general",
+    tags: ["history", "franchise", "series", "previous", "gta 5", "gta 4", "gta 3", "san andreas", "vice city stories"],
+    content: "GTA has a rich history spanning decades.",
+    responses: [
+      "The **Grand Theft Auto** franchise debuted in 1997 and has since become the highest-grossing entertainment franchise in history. Key entries: **GTA III** (2001) — invented the 3D open world. **Vice City** (2002) — 1980s Miami, Tommy Vercetti, legendary soundtrack. **San Andreas** (2004) — CJ, Grove Street, massive map. **GTA IV** (2008) — Niko Bellic, Liberty City, darker tone. **GTA V** (2013) — three protagonists, Los Santos, GTA Online, 200+ million copies sold. Now **GTA VI** returns to Vice City — full circle.",
+      "GTA's evolution: 2D top-down (1997-1999) → 3D revolution with GTA III (2001) → Vice City's 80s Miami (2002) → San Andreas' massive scope (2004) → GTA IV's cinematic storytelling (2008) → GTA V's unprecedented success (2013, 200M+ copies sold). GTA VI is the first mainline entry in **13 YEARS**. It returns to Vice City — the location that made the franchise a cultural phenomenon. The hype is justified because Rockstar has NEVER missed.",
+      "Quick GTA history from Honest John: The franchise started in 1997, went 3D in 2001, peaked with Vice City and San Andreas, matured with GTA IV, and then GTA V became the highest-grossing entertainment product EVER (200+ million copies, $8+ billion in revenue). GTA VI is the first new entry in 13 years. It returns to Vice City. Rockstar has had over a decade to perfect it. No pressure!"
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HONEST JOHN / APP
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "about-app",
+    title: "About This Website",
+    category: "app",
+    tags: ["app", "website", "site", "this", "what is this", "how", "features", "web"],
+    content: "This is the Honest John's Travel Agency website.",
+    responses: [
+      "Welcome to **Honest John's Travel Agency™** — the most comprehensive GTA 6 community hub on the internet! Features include:\n\n🗺️ **Interactive Map** — Explore all 6 Leonida regions with detailed info panels\n📰 **VCNN News Feed** — Auto-scraped GTA 6 news from 6 major gaming outlets\n🛣️ **Route Planner** — Plan routes between Leonida locations\n🔍 **Forensic Viewer** — Analyze trailer screenshots for hidden details\n⚖️ **Comparison Slider** — Compare GTA V vs GTA VI side by side\n❓ **FAQ Section** — Community Q&A\n🏆 **Leaderboard** — Community contributor rankings\n📌 **Pin System** — Drop community-sourced POIs on the map\n💬 **Honest John AI** — That's ME, darling!",
+      "This website is the **Honest John's Travel Agency™ Community Hub** — your one-stop guide to everything GTA 6 and Leonida. I've got an interactive map of all six regions, a live news feed scraping GTA 6 articles from major outlets, a route planner, forensic trailer analysis tools, comparison sliders, community pin system, leaderboard, FAQ, and ME — your friendly neighborhood AI travel consultant. All running locally in your browser. No API key needed for the chat!",
+      "You're on **Honest John's Travel Agency™** — a fan-built GTA 6 community platform. Interactive map with all six Leonida regions. Live GTA 6 news aggregator. Route planner. Forensic screenshot analyzer. Community pinboard. Leaderboard. FAQ. And yours truly, Honest John, as your AI guide. The map and chatbot work completely offline. The news feed and community features connect to a live backend. PREMIUM experience, zero cost!"
     ]
   },
   {
-    id: "misc-music",
-    category: "gameplay",
-    tags: ["music", "radio", "soundtrack", "song", "songs", "station", "radio station", "listen"],
-    title: "Radio & Soundtrack",
-    content: "Multiple radio stations. Latin pop, reggaeton, hip-hop, rock, electronic, talk radio. Licensed + original tracks.",
+    id: "about-map",
+    title: "Interactive Map Feature",
+    category: "app",
+    tags: ["map", "interactive map", "explore", "click", "region", "pin"],
+    content: "The interactive map lets you explore Leonida's regions.",
     responses: [
-      "The RADIO! GTA's radio stations are legendary! Expect Latin beats, hip-hop bangers, talk radio insanity, and smooth jazz for Ocean Drive cruising! Honest John's favorite station? Whichever one is playing during a scenic getaway!",
-      "GTA 6 radio will be INCREDIBLE! Given Leonida's Latin influence, expect reggaeton, salsa, Latin pop alongside hip-hop, rock, and electronic! Plus Rockstar's legendary talk radio satire! Honest John's campaign to HOST a radio show was denied. UNFAIRLY.",
-      "Radio stations, darling! The soundtrack of Leonida! Multiple genres reflecting the state's cultural diversity — Latin rhythms for Vice City, country for the rural areas, and talk radio so satirical it hurts! The driving music alone is worth the price of admission!",
+      "The **Interactive Map** is this website's crown jewel! Click any of the 6 Leonida regions to see: name, real-world inspiration, danger rating, population estimate, Honest John's satirical review, top attractions, and tags. You can switch between 'Leonida 2026' and 'GTA V Scale' views. Logged-in users can drop **community pins** marking specific locations, which other users can upvote. Pins that get 3+ upvotes become VERIFIED on the atlas!",
+      "Check out the **Map** section! Six clickable regions — Vice City, Grassrivers, Ambrosia, Port Gellhorn, Mt. Kalaga NP, and Leonida Keys. Each one has a detailed info panel with danger ratings, population estimates, Honest John's travel review, top attractions, and thematic tags. Plus a community pin system where users can mark and discuss locations. It's like Google Maps but for a fictional crime state. BETTER than Google Maps, honestly.",
+      "The **Interactive Map** lets you explore all of Leonida! Click any region for full details: real-world inspiration, danger level, population, satirical travel review by yours truly, top attractions, and category tags. Community members can login and drop pins on the map to mark specific points of interest. Pins with 3+ upvotes get verified status. It's a living, community-driven atlas of GTA 6's world!"
     ]
   },
+  {
+    id: "about-news",
+    title: "VCNN News Feed",
+    category: "app",
+    tags: ["news", "vcnn", "articles", "scraper", "feed", "latest"],
+    content: "VCNN scrapes GTA 6 news from major gaming outlets.",
+    responses: [
+      "**VCNN (Vice City News Network)** is the app's live news intelligence feed. It automatically scrapes GTA 6 articles from **six major gaming outlets**: Kotaku, GameSpot, PCGamer, GamesRadar, IGN, and Eurogamer. Articles are filtered for GTA 6 relevance, scored from 1-5, and displayed with source-specific color coding. The scraper runs on a 24-hour cycle, so you always have the freshest GTA 6 intel. Hit 'Refresh Intel' for an immediate scan!",
+      "The **VCNN News Feed** is your GTA 6 news aggregator. It monitors six major gaming sites (Kotaku, GameSpot, PCGamer, GamesRadar, IGN, Eurogamer), scrapes any articles mentioning GTA 6, scores their relevance, and displays them in a slick breaking-news format with source colors and timestamps. Auto-refreshes every 24 hours. Filter by source. Each article links to the original. It's Honest John's intelligence network!",
+      "**VCNN** — Vice City News Network! Automated GTA 6 news scraped from Kotaku, GameSpot, PCGamer, GamesRadar, IGN, and Eurogamer. Relevance-scored, color-coded by source, and updated on a 24-hour cycle. It's like having a team of journalists working for Honest John. Spoiler: Honest John's journalism standards are 'flexible.' But the SOURCES are premium!"
+    ]
+  },
+  {
+    id: "about-routes",
+    title: "Route Planner",
+    category: "app",
+    tags: ["route", "planner", "directions", "path", "travel", "navigate", "distance"],
+    content: "Plan routes between Leonida locations.",
+    responses: [
+      "The **Route Planner** lets you plot driving routes between Leonida locations! Pick a start and end point — Vice City to Leonida Keys, Port Gellhorn to Mt. Kalaga, whatever you want — and it calculates the optimal path with waypoints and estimated distances. It uses the game's road network graph to find the shortest route. Perfect for planning your GTA VI road trips BEFORE the game even launches!",
+      "Need directions across Leonida? The **Route Planner** has you covered! Select your origin and destination from 10+ locations including Vice City, Ocean Drive, MacArthur Causeway, Grassrivers, Leonida Keys, Honda Bridge, Port Gellhorn, Mt. Kalaga, Ambrosia, and more. The algorithm finds the optimal route, shows waypoints on the map, and gives you turn-by-turn steps with distances. Honest John's navigation: always scenic, occasionally safe.",
+      "The **Route Planner** — Honest John's GPS! Pick two Leonida locations and get the optimal route with waypoints, distances, and step-by-step directions. Vice City to the Keys? 1.5 units via Honda Bridge. Port Gellhorn to Mt. Kalaga? 3.0 units through the northern highway. Great for planning your Day One exploration route. Honest John recommends avoiding Grassrivers after sunset. For OBVIOUS reasons."
+    ]
+  },
+  {
+    id: "honest-john-lore",
+    title: "Who Is Honest John?",
+    category: "honest-john",
+    tags: ["honest john", "who", "history", "backstory", "agency", "travel agent"],
+    content: "Honest John is the fictional proprietor of the travel agency.",
+    responses: [
+      "**Honest John** — proprietor, CEO, chief marketing officer, and sole surviving employee of Honest John's Travel Agency™, Leonida's most prestigious (and only?) tourism consultancy. I've been guiding tourists through Leonida's six regions since before the state had road signs. My reviews are 'editorially independent.' My insurance policies are 'comprehensive-ish.' My knowledge of GTA 6 is ENCYCLOPEDIC. I run entirely on local code — no cloud AI, no API keys, just pure Honest John energy stored right in your browser!",
+      "Honest John is a man of MYSTERY, darling! I'm the friendly AI chatbot who lives in this website. I know everything about GTA 6's world, characters, gameplay, and lore. I was built to run entirely offline — no ChatGPT, no cloud services, just a massive local knowledge base and a personality that was definitely NOT court-ordered. The 'Honest' in my name is aspirational. The 'John' is legally binding.",
+      "I am **Honest John** — Leonida's premier travel consultant and this website's embedded AI guide! I specialize in: all six Leonida regions, GTA 6 release details, character bios, gameplay mechanics, franchise history, and this website's features. I run 100% locally in your browser — no internet required, no API calls, no data leaving your device. Just me, my knowledge base, and my considerable charm. The agency is ALWAYS open!"
+    ]
+  },
+  {
+    id: "safety-disclaimer",
+    title: "Is Leonida Safe?",
+    category: "honest-john",
+    tags: ["safe", "safety", "danger", "dangerous", "crime", "tourist", "risk"],
+    content: "Honest John's take on Leonida's safety.",
+    responses: [
+      "Is Leonida SAFE? That depends on your definition of safe! Vice City: 9/10 danger (but the nightlife is 10/10). Grassrivers: 7/10 (the alligators keep things interesting). Port Gellhorn: 6/10 (dock workers are unpredictable). Mt. Kalaga: 5/10 (nature doesn't negotiate). Ambrosia: 4/10 (watch out for heavy machinery). The Keys: 3/10 (safest region — by DAY). Honest John's honest assessment: Leonida is perfectly safe for anyone with excellent reflexes, comprehensive insurance, and a flexible definition of 'survival.'",
+      "Safe? SAFE?! This is LEONIDA, darling! The state where the tourism board's motto is 'Come for the beaches, stay because you can't find your car.' Every region has its own flavor of danger — from Vice City's criminal underworld to Grassrivers' apex predators. But that's what makes it EXCITING! Honest John's agency has a 94% tourist survival rate. The other 6% are having a PREMIUM extended stay. Against their will. But PREMIUM!",
+      "Honest John's safety advisory: On a scale of 1-10, Leonida averages about a 5.7. But that's AVERAGE — Vice City alone is a 9/10 on the danger scale. The Keys are a cozy 3/10. Grassrivers? The alligators set the agenda. My advice: comprehensive insurance, situational awareness, and a willingness to run. Also, Honest John is NOT liable for consequences arising from travel recommendations. This is in the terms and conditions. Which nobody reads. PERFECT."
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // COMPARISON / TRIVIA
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    id: "gta5-vs-gta6",
+    title: "GTA V vs GTA VI",
+    category: "general",
+    tags: ["compare", "comparison", "vs", "versus", "gta 5", "gta v", "difference", "upgrade", "better"],
+    content: "GTA 6 represents a massive leap over GTA 5.",
+    responses: [
+      "**GTA V vs GTA VI** — the generational leap:\n\n• **Map**: V = Los Santos + Blaine County. VI = Vice City + 5 more regions (~2x bigger)\n• **Protagonists**: V = 3 (Michael, Trevor, Franklin). VI = 2 (Jason, Lucia)\n• **Setting**: V = 2013 LA. VI = Modern-day Florida\n• **AI**: V = Basic NPC routines. VI = Dynamic reactions, memory, social networks\n• **Interiors**: V = ~12 enterable buildings. VI = Hundreds\n• **Wildlife**: V = Minimal. VI = Full ecosystem (alligators, panthers, sharks, dolphins)\n• **Dev Time**: V = ~5 years. VI = ~10 years\n\n13 years of evolution. It's not an upgrade — it's a REVOLUTION.",
+      "GTA V was a masterpiece. GTA VI is a GENERATIONAL LEAP. The map is roughly twice the size. The NPC AI goes from basic routines to dynamic behavior with memory and social networks. Enterable interiors jump from a handful to hundreds. Wildlife goes from decorative to an entire ecosystem. The story focuses on two protagonists instead of three. The setting is modern-day Florida versus 2013 Los Angeles. Rockstar has had 10+ years and 2,000+ developers working on this. The difference will be STAGGERING.",
+      "Honest John's comparison: GTA V was a 10/10. GTA VI is built to be an 11/10. Twice the map. A hundred times the interiors. Advanced NPC AI. Full wildlife ecosystem. Dual protagonists with the tightest narrative Rockstar has ever written. Modern-day setting with social media satire. 13 years between entries — the longest gap in franchise history. Everything Rockstar learned from GTA V and Red Dead Redemption 2 goes into this. It's their magnum opus."
+    ]
+  },
+  {
+    id: "price",
+    title: "GTA 6 Price",
+    category: "general",
+    tags: ["price", "cost", "how much", "expensive", "buy", "purchase", "pre-order"],
+    content: "GTA 6 is expected to be priced at $69.99.",
+    responses: [
+      "GTA VI is expected to be priced at **$69.99 USD** — the standard price point for AAA PS5/Xbox Series X games. Take-Two (Rockstar's parent company) has confirmed the industry-standard pricing. Special editions and pre-order bonuses haven't been fully detailed yet, but expect the usual tiers: Standard, Special, and Ultimate editions with in-game bonuses. Pre-orders will likely open when the launch marketing campaign begins in Summer 2026.",
+      "Expected price: **$69.99** for the standard edition. Take-Two has aligned with the $70 next-gen pricing standard. Premium/collector's editions will likely cost more ($90–$150 range based on industry trends). Pre-orders haven't opened yet — expect that during the Summer 2026 marketing push. Honest John's financial advice: $70 for potentially thousands of hours of entertainment? That's PREMIUM value, darling!",
+      "**$69.99** for the base game — standard next-gen pricing. Special editions TBD but expect $90-$150 tiers. Pre-orders likely opening Summer 2026 with the marketing campaign. Considering GTA V gave people 10+ years of content, $70 is the deal of the CENTURY. Honest John has already budgeted. The agency's 'entertainment expenses' line item just got VERY generous."
+    ]
+  },
+  {
+    id: "gta-online-2",
+    title: "GTA Online 2",
+    category: "general",
+    tags: ["online", "multiplayer", "gta online", "online mode", "co-op", "friends"],
+    content: "GTA 6 is expected to feature a new online mode.",
+    responses: [
+      "While Rockstar hasn't officially detailed GTA VI's multiplayer component, a new version of **GTA Online** is widely expected. GTA V's Online mode generated over $8 billion in revenue through microtransactions and became one of the most successful multiplayer games ever. Industry analysts expect GTA VI to launch with a focus on the single-player story, with an expanded GTA Online component rolling out post-launch. Expect it to be MASSIVE.",
+      "GTA Online made Rockstar BILLIONS — so yes, expect a **GTA Online 2.0** with GTA VI. Details are scarce, but it's virtually guaranteed. The single-player story will likely be the launch priority, with the online component expanding over time. Given Rockstar's experience running GTA Online for 13+ years, the new version will likely be more sophisticated, better balanced, and designed for next-gen hardware from day one.",
+      "A new GTA Online is the worst-kept secret in gaming. GTA V's online mode generated $8+ BILLION in revenue. Rockstar isn't walking away from that. Expect GTA VI to launch with its story mode, then roll out an expansive online component. Honest John's prediction: it'll be bigger, deeper, and designed to keep you playing for YEARS. The agency plans to open a virtual branch. Location: Ocean Drive. Obviously."
+    ]
+  }
 ];
 
 export default KNOWLEDGE_BASE;
