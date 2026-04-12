@@ -75,10 +75,9 @@ async def startup():
         _scheduler.start()
         logger.info("News scraper scheduler started (24-hr cycle)")
 
-    # Run initial scrape if DB is empty
-    if await db.news_articles.count_documents({}) == 0:
-        asyncio.create_task(scrape_news_task())
-        logger.info("Initial news scrape triggered")
+    # Always scrape on startup — fresh news on every deploy/restart
+    asyncio.create_task(scrape_news_task())
+    logger.info("Startup news scrape triggered")
 
 
 @app.on_event("shutdown")
