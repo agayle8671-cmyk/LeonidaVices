@@ -135,6 +135,9 @@ class RouteRequest(BaseModel):
     start: str
     end: str
 
+class MultiStopRouteRequest(BaseModel):
+    stops: list  # ["Vice City", "Grassrivers", "Mt. Kalaga NP"]
+
 class CommunityPOICreate(BaseModel):
     name: str
     description: str = ""
@@ -258,6 +261,62 @@ async def find_route(req: RouteRequest):
                "distance": round(next((c for nb, c in GRAPH.get(path[i], []) if nb == path[i + 1]), 0), 2)}
              for i in range(len(path) - 1)]
     return {"path": path, "waypoints": waypoints, "total_distance": distance, "steps": steps}
+
+@main_router.post("/route/multi")
+async def find_multi_route(req: MultiStopRouteRequest):
+    """Multi-stop route: chain A* between consecutive stops."""
+    if len(req.stops) < 2:
+        raise HTTPException(400, "Need at least 2 stops")
+    # Validate all stops exist
+    for s in req.stops:
+        if s not in LOCATIONS:
+            raise HTTPException(404, f"Unknown location: {s}")
+
+    segments = []
+    total_distance = 0
+    full_path = []
+    full_waypoints = []
+
+    for i in range(len(req.stops) - 1):
+        s, e = req.stops[i], req.stops[i + 1]
+        if s == e:
+            continue
+        path, distance = astar(s, e)
+        if not path:
+            raise HTTPException(404, f"No route between {s} and {e}")
+
+        waypoints = [{"name": n, "x": LOCATIONS[n]["x"], "y": LOCATIONS[n]["y"]} for n in path]
+        steps = [{"from": path[j], "to": path[j + 1],
+                   "distance": round(next((c for nb, c in GRAPH.get(path[j], []) if nb == path[j + 1]), 0), 2)}
+                 for j in range(len(path) - 1)]
+
+        segments.append({
+            "from": s, "to": e,
+            "segment_index": i,
+            "path": path,
+            "waypoints": waypoints,
+            "distance": distance,
+            "steps": steps,
+        })
+        total_distance += distance
+
+        # Build full path (skip duplicate at joins)
+        if not full_path:
+            full_path.extend(path)
+            full_waypoints.extend(waypoints)
+        else:
+            full_path.extend(path[1:])  # skip first (already in list)
+            full_waypoints.extend(waypoints[1:])
+
+    return {
+        "stops": req.stops,
+        "segments": segments,
+        "full_path": full_path,
+        "full_waypoints": full_waypoints,
+        "total_distance": round(total_distance, 2),
+        "total_stops": len(req.stops),
+        "total_segments": len(segments),
+    }
 
 @main_router.post("/chat")
 async def chat(req: ChatRequest):
