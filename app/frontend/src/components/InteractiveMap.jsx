@@ -1,11 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { X, MapPin, AlertTriangle, Star, ChevronRight, Plus, Clock, Check, Trash2, ThumbsUp, Flag, CheckCircle, Lock } from "lucide-react";
+import { X, MapPin, AlertTriangle, Star, ChevronRight, Plus, Clock, Check, Trash2, ThumbsUp, Flag, CheckCircle, Lock, ZoomIn, ZoomOut, Maximize, MessageCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import REGIONS_DATA from "../data/regionsData";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   REGION HEADER IMAGES — Unsplash (free, instant, high-quality)
+   ═══════════════════════════════════════════════════════════════════════════ */
+const REGION_IMAGES = {
+  "vice-city": "https://images.unsplash.com/photo-1514214246283-d427a95c5d2f?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+  "grassrivers": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+  "ambrosia": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+  "port-gellhorn": "https://images.unsplash.com/photo-1519309621146-2a47d1f7103a?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+  "mt-kalaga": "https://images.unsplash.com/photo-1448375240586-882707db888b?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+  "leonida-keys": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=srgb&fm=jpg&ixlib=rb-4.1.0&q=80&w=800",
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAP GEOMETRY
+   ═══════════════════════════════════════════════════════════════════════════ */
 const REGION_PATHS = [
   { id: "port-gellhorn", name: "Port Gellhorn", path: "M 30,30 L 185,30 L 190,270 L 110,285 L 30,265 Z", base: "#0d1a28", hover: "#1a3a5a", stroke: "#FF8C00", labelX: 100, labelY: 155 },
   { id: "mt-kalaga", name: "Mt. Kalaga NP", path: "M 185,30 L 615,30 L 635,235 L 425,258 L 260,238 L 190,270 L 185,30 Z", base: "#0d2a14", hover: "#1a5028", stroke: "#39FF14", labelX: 390, labelY: 130 },
@@ -16,18 +31,27 @@ const REGION_PATHS = [
 ];
 
 const POIS = [
-  { id: "ocean-drive", name: "Ocean Drive", x: 695, y: 445 },
-  { id: "macarthur-causeway", name: "MacArthur Causeway", x: 648, y: 432 },
-  { id: "honda-bridge", name: "Honda Bridge", x: 748, y: 592 },
-  { id: "thrillbilly", name: "Thrillbilly Mud Club", x: 278, y: 505 },
-  { id: "sugar-mill", name: "Sugar Mill", x: 380, y: 350 },
-  { id: "kalaga-summit", name: "Kalaga Summit", x: 430, y: 100 },
-  { id: "gellhorn-port", name: "Gellhorn Port", x: 90, y: 200 },
+  { id: "ocean-drive", name: "Ocean Drive", x: 695, y: 445, icon: "🏖️" },
+  { id: "macarthur-causeway", name: "MacArthur Causeway", x: 648, y: 432, icon: "🌉" },
+  { id: "honda-bridge", name: "Honda Bridge", x: 748, y: 592, icon: "🌉" },
+  { id: "thrillbilly", name: "Thrillbilly Mud Club", x: 278, y: 505, icon: "🏎️" },
+  { id: "sugar-mill", name: "Sugar Mill", x: 380, y: 350, icon: "🏭" },
+  { id: "kalaga-summit", name: "Kalaga Summit", x: 430, y: 100, icon: "⛰️" },
+  { id: "gellhorn-port", name: "Gellhorn Port", x: 90, y: 200, icon: "⚓" },
 ];
 
 const CATEGORIES = ["landmark", "hideout", "business", "easter_egg", "scenic", "criminal", "other"];
 const CAT_COLORS = { landmark: "#FFE600", hideout: "#FF007F", business: "#00E5FF", easter_egg: "#39FF14", scenic: "#00BFFF", criminal: "#FF2A2A", other: "#aaa" };
+const CAT_ICONS = { landmark: "📍", hideout: "🏚️", business: "💼", easter_egg: "🥚", scenic: "📸", criminal: "💀", other: "📌" };
 const LS_X = 130, LS_Y = 95, LS_W = 545, LS_H = 430;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ZOOM / PAN CONSTANTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 4;
+const ZOOM_STEP = 0.3;
+const BASE_VIEWBOX = { x: 0, y: 0, w: 880, h: 660 };
 
 function detectRegion(x, y) {
   if (x > 515 && y > 358 && y < 500) return "vice-city";
@@ -38,9 +62,30 @@ function detectRegion(x, y) {
   return "mt-kalaga";
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   AMBIENT PARTICLES (ocean sparkle)
+   ═══════════════════════════════════════════════════════════════════════════ */
+function generateParticles(count = 30) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    cx: Math.random() * 880,
+    cy: Math.random() * 660,
+    r: 0.5 + Math.random() * 1.5,
+    dur: 2 + Math.random() * 4,
+    delay: Math.random() * 3,
+    opacity: 0.1 + Math.random() * 0.3,
+  }));
+}
+
+const PARTICLES = generateParticles(35);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════════════════ */
 export default function InteractiveMap() {
   const [hovered, setHovered] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [hoveredPoi, setHoveredPoi] = useState(null);
   const regions = REGIONS_DATA;
   const [viewMode, setViewMode] = useState("leonida");
   const [addPinMode, setAddPinMode] = useState(false);
@@ -49,27 +94,185 @@ export default function InteractiveMap() {
   const [communityPins, setCommunityPins] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const svgRef = useRef(null);
+  const containerRef = useRef(null);
   const { user, getHeaders, openAuth } = useAuth();
 
+  // ── Zoom / Pan State ──
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const panStart = useRef({ x: 0, y: 0 });
+  const panOrigin = useRef({ x: 0, y: 0 });
+  const lastTouchDist = useRef(null);
+  const lastTouchCenter = useRef(null);
+
+  // ── Danger meter animation ──
+  const [dangerAnimated, setDangerAnimated] = useState(false);
   useEffect(() => {
-    // Regions are loaded locally — no API call needed
-    // Community pins still try the backend (graceful failure if offline)
+    if (selected) {
+      setDangerAnimated(false);
+      const t = setTimeout(() => setDangerAnimated(true), 100);
+      return () => clearTimeout(t);
+    }
+  }, [selected]);
+
+  useEffect(() => {
     axios.get(`${API}/community/pois`, { headers: getHeaders() })
       .then(r => setCommunityPins(r.data))
-      .catch(() => {}); // Silently fail if backend is offline
+      .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getRegionData = (id) => regions.find(r => r.id === id);
 
-  const handleSvgClick = useCallback((e) => {
-    if (!addPinMode || !svgRef.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    setPendingPin({
-      x: Math.round(((e.clientX - rect.left) / rect.width) * 880),
-      y: Math.round(((e.clientY - rect.top) / rect.height) * 660),
+  // ── Compute viewBox from zoom + pan ──
+  const getViewBox = useCallback(() => {
+    const w = BASE_VIEWBOX.w / zoom;
+    const h = BASE_VIEWBOX.h / zoom;
+    const maxX = BASE_VIEWBOX.w - w;
+    const maxY = BASE_VIEWBOX.h - h;
+    const x = Math.max(0, Math.min(maxX, (BASE_VIEWBOX.w - w) / 2 - pan.x));
+    const y = Math.max(0, Math.min(maxY, (BASE_VIEWBOX.h - h) / 2 - pan.y));
+    return `${x} ${y} ${w} ${h}`;
+  }, [zoom, pan]);
+
+  // ── SVG coordinate conversion (accounts for zoom/pan) ──
+  const svgPoint = useCallback((clientX, clientY) => {
+    if (!svgRef.current) return { x: 0, y: 0 };
+    const svg = svgRef.current;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const ctm = svg.getScreenCTM().inverse();
+    const svgPt = pt.matrixTransform(ctm);
+    return { x: Math.round(svgPt.x), y: Math.round(svgPt.y) };
+  }, []);
+
+  // ── Zoom controls ──
+  const handleZoomIn = () => setZoom(z => Math.min(MAX_ZOOM, z + ZOOM_STEP));
+  const handleZoomOut = () => { setZoom(z => { const nz = Math.max(MIN_ZOOM, z - ZOOM_STEP); if (nz <= 1) setPan({ x: 0, y: 0 }); return nz; }); };
+  const handleResetZoom = () => { setZoom(1); setPan({ x: 0, y: 0 }); };
+
+  // ── Scroll wheel zoom ──
+  const handleWheel = useCallback((e) => {
+    e.preventDefault();
+    setZoom(z => {
+      const nz = e.deltaY < 0 ? Math.min(MAX_ZOOM, z + ZOOM_STEP * 0.5) : Math.max(MIN_ZOOM, z - ZOOM_STEP * 0.5);
+      if (nz <= 1) setPan({ x: 0, y: 0 });
+      return nz;
     });
-  }, [addPinMode]);
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (el) el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => { if (el) el.removeEventListener("wheel", handleWheel); };
+  }, [handleWheel]);
+
+  // ── Mouse pan ──
+  const handleMouseDown = useCallback((e) => {
+    if (addPinMode || zoom <= 1) return;
+    setIsPanning(true);
+    panStart.current = { x: e.clientX, y: e.clientY };
+    panOrigin.current = { ...pan };
+  }, [addPinMode, zoom, pan]);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isPanning) return;
+    const dx = (e.clientX - panStart.current.x) / zoom;
+    const dy = (e.clientY - panStart.current.y) / zoom;
+    setPan({ x: panOrigin.current.x + dx, y: panOrigin.current.y + dy });
+  }, [isPanning, zoom]);
+
+  const handleMouseUp = useCallback(() => setIsPanning(false), []);
+
+  useEffect(() => {
+    if (isPanning) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+      return () => { window.removeEventListener("mousemove", handleMouseMove); window.removeEventListener("mouseup", handleMouseUp); };
+    }
+  }, [isPanning, handleMouseMove, handleMouseUp]);
+
+  // ── Touch pinch-zoom + pan ──
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastTouchDist.current = Math.hypot(dx, dy);
+      lastTouchCenter.current = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+    } else if (e.touches.length === 1 && zoom > 1) {
+      setIsPanning(true);
+      panStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      panOrigin.current = { ...pan };
+    }
+  }, [zoom, pan]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      if (lastTouchDist.current) {
+        const scale = dist / lastTouchDist.current;
+        setZoom(z => {
+          const nz = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z * scale));
+          if (nz <= 1) setPan({ x: 0, y: 0 });
+          return nz;
+        });
+      }
+      lastTouchDist.current = dist;
+      // Pan with two fingers
+      const center = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+      if (lastTouchCenter.current && zoom > 1) {
+        const panDx = (center.x - lastTouchCenter.current.x) / zoom;
+        const panDy = (center.y - lastTouchCenter.current.y) / zoom;
+        setPan(p => ({ x: p.x + panDx, y: p.y + panDy }));
+      }
+      lastTouchCenter.current = center;
+    } else if (e.touches.length === 1 && isPanning) {
+      const dx = (e.touches[0].clientX - panStart.current.x) / zoom;
+      const dy = (e.touches[0].clientY - panStart.current.y) / zoom;
+      setPan({ x: panOrigin.current.x + dx, y: panOrigin.current.y + dy });
+    }
+  }, [isPanning, zoom]);
+
+  const handleTouchEnd = useCallback(() => {
+    lastTouchDist.current = null;
+    lastTouchCenter.current = null;
+    setIsPanning(false);
+  }, []);
+
+  // ── Double-click zoom to region ──
+  const handleDoubleClickRegion = useCallback((regionId) => {
+    const region = REGION_PATHS.find(r => r.id === regionId);
+    if (!region) return;
+    if (zoom > 1.5) {
+      handleResetZoom();
+    } else {
+      setZoom(2.5);
+      const cx = BASE_VIEWBOX.w / 2;
+      const cy = BASE_VIEWBOX.h / 2;
+      setPan({ x: (cx - region.labelX) * 0.8, y: (cy - region.labelY) * 0.8 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoom]);
+
+  // ── Pin placement (with zoom-aware coordinates) ──
+  const handleSvgClick = useCallback((e) => {
+    if (isPanning) return;
+    if (!addPinMode || !svgRef.current) return;
+    const { x, y } = svgPoint(e.clientX, e.clientY);
+    setPendingPin({ x, y });
+  }, [addPinMode, isPanning, svgPoint]);
 
   const submitPin = async () => {
     if (!pendingPin || !pinForm.name.trim()) return;
@@ -122,16 +325,17 @@ export default function InteractiveMap() {
 
   return (
     <div className="page-content min-h-screen bg-[#050505] flex flex-col lg:flex-row">
-      {/* MAP */}
+      {/* ══════════════ MAP AREA ══════════════ */}
       <div className="flex-1 relative p-3 sm:p-4 lg:p-6">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <div>
             <p className="font-accent text-[#FF007F] text-base">Interactive</p>
             <h1 className="font-heading text-2xl sm:text-4xl text-white">Map of Leonida</h1>
-            <p className="font-body text-gray-500 text-xs mt-0.5">Click any region for Honest John's travel briefing</p>
+            <p className="font-body text-gray-500 text-xs mt-0.5">Click any region · Scroll to zoom · Drag to pan</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {/* Time-Travel toggle */}
+            {/* View mode toggle */}
             <div className="flex items-center gap-1 glass-panel p-1 rounded-lg">
               <button onClick={() => setViewMode("leonida")} data-testid="view-mode-leonida"
                 className={`px-2.5 py-1.5 rounded-md text-xs font-heading transition-all ${viewMode === "leonida" ? "bg-[#FF007F] text-white" : "text-gray-400"}`}>
@@ -164,63 +368,174 @@ export default function InteractiveMap() {
           </div>
         )}
 
-        <div className="relative w-full" style={{ paddingBottom: "75%" }}>
-          <svg ref={svgRef} viewBox="0 0 880 660"
-            className={`absolute inset-0 w-full h-full rounded-xl overflow-hidden ${addPinMode ? "cursor-crosshair" : ""}`}
-            style={{ background: "radial-gradient(ellipse at 60% 70%, #001525 0%, #000a15 60%, #000308 100%)" }}
-            onClick={handleSvgClick} data-testid="leonida-map-svg">
+        {/* ── MAP SVG WITH ZOOM/PAN ── */}
+        <div ref={containerRef} className="relative w-full rounded-xl overflow-hidden"
+          style={{ paddingBottom: "75%", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 0 60px rgba(255,0,127,0.08), inset 0 0 80px rgba(0,0,0,0.5)" }}>
+          <svg ref={svgRef} viewBox={getViewBox()}
+            className={`absolute inset-0 w-full h-full ${addPinMode ? "cursor-crosshair" : zoom > 1 ? "cursor-grab" : ""} ${isPanning ? "cursor-grabbing" : ""}`}
+            style={{ background: "radial-gradient(ellipse at 60% 70%, #001a33 0%, #000d1f 40%, #000308 100%)", touchAction: "none" }}
+            onClick={handleSvgClick}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            data-testid="leonida-map-svg">
+
             <defs>
               <radialGradient id="og" cx="60%" cy="70%" r="60%"><stop offset="0%" stopColor="#001f3f" stopOpacity="0.4" /><stop offset="100%" stopColor="#000a15" stopOpacity="0" /></radialGradient>
               <filter id="glow"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              <filter id="glow-strong"><feGaussianBlur stdDeviation="6" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              {/* Ocean wave pattern */}
+              <pattern id="ocean-waves" x="0" y="0" width="60" height="30" patternUnits="userSpaceOnUse">
+                <path d="M0 15 Q15 5, 30 15 Q45 25, 60 15" fill="none" stroke="rgba(0,229,255,0.06)" strokeWidth="0.8">
+                  <animateTransform attributeName="transform" type="translate" from="0 0" to="-60 0" dur="8s" repeatCount="indefinite" />
+                </path>
+                <path d="M0 25 Q15 15, 30 25 Q45 35, 60 25" fill="none" stroke="rgba(0,100,200,0.04)" strokeWidth="0.5">
+                  <animateTransform attributeName="transform" type="translate" from="0 0" to="60 0" dur="12s" repeatCount="indefinite" />
+                </path>
+              </pattern>
+              {/* Terrain patterns */}
+              <pattern id="terrain-swamp" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="1" fill="rgba(0,229,255,0.08)" /><circle cx="15" cy="12" r="0.8" fill="rgba(0,180,200,0.06)" />
+                <circle cx="10" cy="18" r="0.6" fill="rgba(0,229,255,0.05)" />
+              </pattern>
+              <pattern id="terrain-urban" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                <rect x="2" y="2" width="5" height="5" fill="none" stroke="rgba(255,0,127,0.06)" strokeWidth="0.3" />
+                <rect x="9" y="9" width="5" height="5" fill="none" stroke="rgba(255,0,127,0.04)" strokeWidth="0.3" />
+              </pattern>
+              <pattern id="terrain-forest" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                <path d="M12 4 L8 12 L16 12 Z" fill="none" stroke="rgba(57,255,20,0.06)" strokeWidth="0.4" />
+                <path d="M4 14 L2 20 L6 20 Z" fill="none" stroke="rgba(57,255,20,0.04)" strokeWidth="0.3" />
+              </pattern>
+              <pattern id="terrain-industrial" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="10" x2="20" y2="10" stroke="rgba(255,140,0,0.05)" strokeWidth="0.3" />
+                <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(255,140,0,0.04)" strokeWidth="0.3" />
+              </pattern>
+              <pattern id="terrain-agriculture" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="4" x2="16" y2="4" stroke="rgba(255,230,0,0.05)" strokeWidth="0.3" />
+                <line x1="0" y1="8" x2="16" y2="8" stroke="rgba(255,230,0,0.04)" strokeWidth="0.3" />
+                <line x1="0" y1="12" x2="16" y2="12" stroke="rgba(255,230,0,0.03)" strokeWidth="0.3" />
+              </pattern>
+              {/* Vignette */}
+              <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+                <stop offset="60%" stopColor="transparent" /><stop offset="100%" stopColor="rgba(0,0,0,0.6)" />
+              </radialGradient>
             </defs>
-            <rect width="880" height="660" fill="url(#og)" />
 
+            {/* Ocean background */}
+            <rect width="880" height="660" fill="url(#og)" />
+            <rect width="880" height="660" fill="url(#ocean-waves)" />
+
+            {/* Ambient particles */}
+            {PARTICLES.map(p => (
+              <circle key={p.id} cx={p.cx} cy={p.cy} r={p.r} fill="#00E5FF" opacity={0}>
+                <animate attributeName="opacity" values={`0;${p.opacity};0`} dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+
+            {/* ── REGION FILLS ── */}
             {REGION_PATHS.map((region) => {
               const isH = hovered === region.id, isS = selected === region.id;
               const dimmed = viewMode === "scale" ? 0.4 : 1;
+              const terrainId = region.id === "grassrivers" ? "terrain-swamp"
+                : region.id === "vice-city" ? "terrain-urban"
+                : region.id === "mt-kalaga" ? "terrain-forest"
+                : region.id === "port-gellhorn" ? "terrain-industrial"
+                : region.id === "ambrosia" ? "terrain-agriculture" : null;
               return (
                 <g key={region.id} style={{ opacity: dimmed, transition: "opacity 0.4s" }}>
+                  {/* Base fill */}
                   <path d={region.path} fill={isH || isS ? region.hover : region.base}
-                    stroke={region.stroke} strokeWidth={isS ? 2.5 : isH ? 2 : 1} strokeOpacity={isS ? 1 : isH ? 0.8 : 0.4}
-                    style={{ cursor: addPinMode ? "crosshair" : "pointer", transition: "all 0.2s",
-                      filter: (isS || isH) ? `drop-shadow(0 0 6px ${region.stroke})` : "none" }}
+                    stroke={region.stroke} strokeWidth={isS ? 3 : isH ? 2.5 : 1.2} strokeOpacity={isS ? 1 : isH ? 0.8 : 0.35}
+                    style={{ cursor: addPinMode ? "crosshair" : "pointer", transition: "all 0.3s ease",
+                      filter: (isS || isH) ? `drop-shadow(0 0 10px ${region.stroke})` : "none" }}
                     onMouseEnter={() => setHovered(region.id)} onMouseLeave={() => setHovered(null)}
-                    onClick={(e) => { if (addPinMode) return; e.stopPropagation(); setSelected(selected === region.id ? null : region.id); }}
+                    onClick={(e) => { if (addPinMode || isPanning) return; e.stopPropagation(); setSelected(selected === region.id ? null : region.id); }}
+                    onDoubleClick={(e) => { e.stopPropagation(); handleDoubleClickRegion(region.id); }}
                     data-testid={`map-region-${region.id}`} />
+                  {/* Terrain texture overlay */}
+                  {terrainId && (
+                    <path d={region.path} fill={`url(#${terrainId})`} style={{ pointerEvents: "none" }} />
+                  )}
+                  {/* Breathing glow border */}
+                  {(isS || isH) && (
+                    <path d={region.path} fill="none" stroke={region.stroke} strokeWidth={1}
+                      strokeOpacity={0.3} style={{ pointerEvents: "none" }}>
+                      <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite" />
+                    </path>
+                  )}
+                  {/* Region label */}
                   <text x={region.labelX} y={region.labelY} textAnchor="middle"
-                    fill={isH || isS ? region.stroke : "rgba(255,255,255,0.5)"} fontSize={isH || isS ? 12 : 10}
-                    fontFamily="Righteous, cursive" style={{ pointerEvents: "none", transition: "all 0.2s" }}>
+                    fill={isH || isS ? region.stroke : "rgba(255,255,255,0.45)"} fontSize={isH || isS ? 13 : 11}
+                    fontFamily="Righteous, cursive" fontWeight={isS ? "bold" : "normal"}
+                    style={{ pointerEvents: "none", transition: "all 0.3s",
+                      filter: (isS || isH) ? `drop-shadow(0 0 8px ${region.stroke})` : "none" }}>
                     {region.name}
                   </text>
                 </g>
               );
             })}
 
+            {/* ── POI MARKERS ── */}
             {viewMode === "leonida" && POIS.map(poi => (
-              <g key={poi.id} data-testid={`poi-${poi.id}`}>
-                <circle cx={poi.x} cy={poi.y} r={5} fill="#FFE600" opacity={0.9} style={{ filter: "drop-shadow(0 0 4px #FFE600)" }} />
-                <circle cx={poi.x} cy={poi.y} r={10} fill="none" stroke="#FFE600" strokeWidth={1} opacity={0.3} />
+              <g key={poi.id} data-testid={`poi-${poi.id}`}
+                onMouseEnter={() => setHoveredPoi(poi.id)} onMouseLeave={() => setHoveredPoi(null)}
+                style={{ cursor: "pointer" }}>
+                {/* Outer pulse ring */}
+                <circle cx={poi.x} cy={poi.y} r={12} fill="none" stroke="#FFE600" strokeWidth={0.8} opacity={0.3}>
+                  <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
+                </circle>
+                {/* Main dot */}
+                <circle cx={poi.x} cy={poi.y} r={6} fill="#FFE600" opacity={0.9}
+                  style={{ filter: "drop-shadow(0 0 6px #FFE600)" }} />
+                <circle cx={poi.x} cy={poi.y} r={3} fill="#000" opacity={0.4} />
+                {/* Hover tooltip */}
+                {hoveredPoi === poi.id && (
+                  <g>
+                    <rect x={poi.x - 55} y={poi.y - 28} width={110} height={20} rx={4}
+                      fill="rgba(0,0,0,0.9)" stroke="#FFE600" strokeWidth={0.8} />
+                    <text x={poi.x} y={poi.y - 15} textAnchor="middle"
+                      fill="#FFE600" fontSize={8} fontFamily="Righteous, cursive">
+                      {poi.icon} {poi.name}
+                    </text>
+                  </g>
+                )}
               </g>
             ))}
 
+            {/* ── COMMUNITY PINS ── */}
             {communityPins.map(pin => {
               const color = CAT_COLORS[pin.category] || "#aaa";
+              const icon = CAT_ICONS[pin.category] || "📌";
               return (
                 <g key={pin.id} data-testid={`community-pin-${pin.id}`}>
-                  <polygon points={`${pin.x},${pin.y-9} ${pin.x+7},${pin.y+4} ${pin.x-7},${pin.y+4}`}
-                    fill={color} opacity={0.9} style={{ filter: `drop-shadow(0 0 5px ${color})` }} />
-                  {pin.verified && <circle cx={pin.x} cy={pin.y-2} r={3} fill="#39FF14" opacity={0.9} />}
+                  <polygon points={`${pin.x},${pin.y-12} ${pin.x+8},${pin.y+3} ${pin.x-8},${pin.y+3}`}
+                    fill={color} opacity={0.9} style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
+                    <animate attributeName="opacity" values="0.7;1;0.7" dur="2.5s" repeatCount="indefinite" />
+                  </polygon>
+                  {pin.verified && <circle cx={pin.x} cy={pin.y-3} r={3.5} fill="#39FF14" opacity={0.9}
+                    style={{ filter: "drop-shadow(0 0 3px #39FF14)" }} />}
+                  <text x={pin.x} y={pin.y - 16} textAnchor="middle" fontSize={8}>{icon}</text>
                 </g>
               );
             })}
 
+            {/* ── PENDING PIN ── */}
             {pendingPin && (
               <g>
-                <circle cx={pendingPin.x} cy={pendingPin.y} r={9} fill="#39FF14" opacity={0.9} style={{ filter: "drop-shadow(0 0 8px #39FF14)" }} />
-                <circle cx={pendingPin.x} cy={pendingPin.y} r={16} fill="none" stroke="#39FF14" strokeWidth={1.5} opacity={0.5} strokeDasharray="4 2" />
+                <circle cx={pendingPin.x} cy={pendingPin.y} r={10} fill="#39FF14" opacity={0.9}
+                  style={{ filter: "drop-shadow(0 0 10px #39FF14)" }} />
+                <circle cx={pendingPin.x} cy={pendingPin.y} r={18} fill="none" stroke="#39FF14"
+                  strokeWidth={1.5} opacity={0.5} strokeDasharray="4 2">
+                  <animateTransform attributeName="transform" type="rotate"
+                    from={`0 ${pendingPin.x} ${pendingPin.y}`} to={`360 ${pendingPin.x} ${pendingPin.y}`}
+                    dur="4s" repeatCount="indefinite" />
+                </circle>
               </g>
             )}
 
+            {/* ── GTA V SCALE OVERLAY ── */}
             {viewMode === "scale" && (
               <g>
                 <rect x={LS_X} y={LS_Y} width={LS_W} height={LS_H} rx={12} fill="rgba(255,165,0,0.08)"
@@ -239,17 +554,57 @@ export default function InteractiveMap() {
               </g>
             )}
 
+            {/* ── COMPASS ROSE ── */}
             <g transform="translate(840, 48)">
-              <circle cx={0} cy={0} r={18} fill="rgba(15,12,41,0.8)" stroke="rgba(255,255,255,0.2)" strokeWidth={1} />
-              <text x={0} y={-5} textAnchor="middle" fill="white" fontSize={8} fontFamily="Righteous">N</text>
-              <text x={0} y={14} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize={6} fontFamily="Righteous">S</text>
-              <text x={12} y={5} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize={6} fontFamily="Righteous">E</text>
-              <text x={-12} y={5} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize={6} fontFamily="Righteous">W</text>
+              <circle cx={0} cy={0} r={20} fill="rgba(5,5,5,0.8)" stroke="rgba(255,255,255,0.15)" strokeWidth={1} />
+              <line x1={0} y1={-14} x2={0} y2={-7} stroke="#FF007F" strokeWidth={2} />
+              <line x1={0} y1={7} x2={0} y2={14} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
+              <line x1={-14} y1={0} x2={-7} y2={0} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
+              <line x1={7} y1={0} x2={14} y2={0} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
+              <text x={0} y={-4} textAnchor="middle" fill="#FF007F" fontSize={9} fontFamily="Righteous" fontWeight="bold">N</text>
+              <text x={0} y={15} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize={6} fontFamily="Righteous">S</text>
+              <text x={13} y={4} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize={6} fontFamily="Righteous">E</text>
+              <text x={-13} y={4} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize={6} fontFamily="Righteous">W</text>
             </g>
-            <text x={440} y={648} textAnchor="middle" fill="rgba(255,255,255,0.07)" fontSize={9} fontFamily="Righteous">HONEST JOHN'S TRAVEL AGENCY · LEONIDA MAP · CONFIDENTIAL</text>
+
+            {/* Vignette overlay */}
+            <rect width="880" height="660" fill="url(#vignette)" style={{ pointerEvents: "none" }} />
+
+            {/* Watermark */}
+            <text x={440} y={648} textAnchor="middle" fill="rgba(255,255,255,0.05)" fontSize={9} fontFamily="Righteous">HONEST JOHN'S TRAVEL AGENCY · LEONIDA MAP · CONFIDENTIAL</text>
           </svg>
+
+          {/* ── ZOOM CONTROLS (overlaid on map) ── */}
+          <div className="absolute bottom-3 right-3 flex flex-col gap-1.5 z-10">
+            <button onClick={handleZoomIn} data-testid="zoom-in-btn"
+              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: "rgba(5,5,5,0.85)", border: "1px solid rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
+              <ZoomIn size={14} className="text-white" />
+            </button>
+            <button onClick={handleZoomOut} data-testid="zoom-out-btn"
+              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: "rgba(5,5,5,0.85)", border: "1px solid rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
+              <ZoomOut size={14} className="text-white" />
+            </button>
+            {zoom > 1 && (
+              <button onClick={handleResetZoom} data-testid="zoom-reset-btn"
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+                style={{ background: "rgba(5,5,5,0.85)", border: "1px solid rgba(255,0,127,0.4)", backdropFilter: "blur(8px)" }}>
+                <Maximize size={14} className="text-[#FF007F]" />
+              </button>
+            )}
+          </div>
+
+          {/* Zoom level indicator */}
+          {zoom > 1 && (
+            <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-xs font-heading text-[#00E5FF] z-10"
+              style={{ background: "rgba(5,5,5,0.85)", border: "1px solid rgba(0,229,255,0.3)" }}>
+              {Math.round(zoom * 100)}%
+            </div>
+          )}
         </div>
 
+        {/* ── REGION QUICK NAV ── */}
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {REGION_PATHS.map(r => (
             <button key={r.id} onClick={() => setSelected(selected === r.id ? null : r.id)}
@@ -268,14 +623,14 @@ export default function InteractiveMap() {
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
-      <div className="lg:w-96 p-3 sm:p-4 lg:p-6 lg:border-l border-t lg:border-t-0 border-white/10 overflow-y-auto max-h-[65vh] lg:max-h-none">
+      {/* ══════════════ RIGHT PANEL ══════════════ */}
+      <div className="lg:w-[420px] p-3 sm:p-4 lg:p-6 lg:border-l border-t lg:border-t-0 border-white/10 overflow-y-auto max-h-[65vh] lg:max-h-none">
         {pendingPin ? (
           <PinForm form={pinForm} setForm={setPinForm} onSubmit={submitPin} onCancel={cancelPin}
             submitting={submitting} user={user} />
         ) : selected ? (
           <RegionPanel data={getRegionData(selected)} path={REGION_PATHS.find(r => r.id === selected)}
-            onClose={() => setSelected(null)} />
+            onClose={() => setSelected(null)} dangerAnimated={dangerAnimated} />
         ) : (
           <CommunityPinList pins={communityPins} addPinMode={addPinMode}
             onDelete={deletePin} onUpvote={upvotePin} onFlag={flagPin}
@@ -286,6 +641,9 @@ export default function InteractiveMap() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   PIN FORM
+   ═══════════════════════════════════════════════════════════════════════════ */
 function PinForm({ form, setForm, onSubmit, onCancel, submitting, user }) {
   return (
     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
@@ -315,7 +673,7 @@ function PinForm({ form, setForm, onSubmit, onCancel, submitting, user }) {
           <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
             className="w-full bg-[#0a0a14] border border-white/10 text-white text-sm rounded-lg px-3 py-2 font-body focus:border-[#39FF14] focus:outline-none"
             data-testid="pin-category-select">
-            {CATEGORIES.map(c => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
+            {CATEGORIES.map(c => <option key={c} value={c}>{CAT_ICONS[c]} {c.replace("_", " ")}</option>)}
           </select>
         </div>
         {!user && (
@@ -339,48 +697,117 @@ function PinForm({ form, setForm, onSubmit, onCancel, submitting, user }) {
   );
 }
 
-function RegionPanel({ data, path, onClose }) {
+/* ═══════════════════════════════════════════════════════════════════════════
+   REGION PANEL — UPGRADED
+   ═══════════════════════════════════════════════════════════════════════════ */
+function RegionPanel({ data, path, onClose, dangerAnimated }) {
   if (!data || !path) return null;
+  const dangerColor = data.danger >= 7 ? "#FF007F" : data.danger >= 5 ? "#FFE600" : "#39FF14";
+  const dangerWidth = dangerAnimated ? `${data.danger * 10}%` : "0%";
+  const img = REGION_IMAGES[data.id];
+
   return (
     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <p className="font-body text-xs uppercase tracking-widest mb-1" style={{ color: path.stroke }}>{data.real_world}</p>
-          <h2 className="font-heading text-2xl text-white">{data.name}</h2>
-          <p className="font-accent text-sm mt-0.5" style={{ color: path.stroke }}>{data.tagline}</p>
+      {/* Header image */}
+      {img && (
+        <div className="relative rounded-xl overflow-hidden mb-4 h-36"
+          style={{ boxShadow: `0 0 30px ${data.glow || path.stroke + "40"}` }}>
+          <img src={img} alt={data.name} className="w-full h-full object-cover"
+            onError={(e) => { e.target.style.display = 'none'; }} />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(to top, #050505, transparent 50%, ${path.stroke}15)` }} />
+          <div className="absolute bottom-0 left-0 right-0 p-3">
+            <p className="font-body text-xs uppercase tracking-widest mb-0.5" style={{ color: path.stroke }}>{data.real_world}</p>
+            <h2 className="font-heading text-2xl text-white" style={{ textShadow: `0 0 15px ${path.stroke}` }}>{data.name}</h2>
+          </div>
+          <button onClick={onClose} className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center bg-black/60 text-gray-400 hover:text-white transition-colors" data-testid="region-panel-close"><X size={14} /></button>
         </div>
-        <button onClick={onClose} className="text-gray-500 hover:text-white p-1" data-testid="region-panel-close"><X size={18} /></button>
-      </div>
+      )}
+
+      {!img && (
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <p className="font-body text-xs uppercase tracking-widest mb-1" style={{ color: path.stroke }}>{data.real_world}</p>
+            <h2 className="font-heading text-2xl text-white">{data.name}</h2>
+          </div>
+          <button onClick={onClose} className="text-gray-500 hover:text-white p-1" data-testid="region-panel-close"><X size={18} /></button>
+        </div>
+      )}
+
+      <p className="font-accent text-sm mb-4" style={{ color: path.stroke }}>{data.tagline}</p>
+
+      {/* Stats row */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="glass-panel p-3 text-center">
-          <p className="font-body text-gray-500 text-xs">Danger</p>
-          <p className="font-heading text-2xl" style={{ color: data.danger >= 7 ? "#FF007F" : data.danger >= 5 ? "#FFE600" : "#39FF14" }}>{data.danger}/10</p>
+        {/* Danger meter */}
+        <div className="glass-panel p-3">
+          <p className="font-body text-gray-500 text-xs mb-1.5">Danger Level</p>
+          <p className="font-heading text-2xl mb-2" style={{ color: dangerColor }}>{data.danger}/10</p>
+          <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+            <div className="h-full rounded-full transition-all duration-1000 ease-out"
+              style={{ width: dangerWidth, background: `linear-gradient(90deg, ${dangerColor}80, ${dangerColor})`,
+                boxShadow: `0 0 8px ${dangerColor}` }} />
+          </div>
         </div>
-        <div className="glass-panel p-3 text-center">
-          <p className="font-body text-gray-500 text-xs">Population</p>
+        {/* Population */}
+        <div className="glass-panel p-3">
+          <p className="font-body text-gray-500 text-xs mb-1.5">Population</p>
           <p className="font-heading text-lg text-white">{data.population}</p>
+          <div className="flex gap-0.5 mt-1.5">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="w-1.5 h-3 rounded-sm" style={{
+                background: i < Math.ceil(parseInt(data.population.replace(/[^0-9]/g, "")) / 500000) ? path.stroke : "rgba(255,255,255,0.08)"
+              }} />
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Honest John says */}
       <div className="glass-panel p-4 mb-4" style={{ borderColor: `${path.stroke}30` }}>
         <div className="flex items-center gap-2 mb-2"><Star size={14} style={{ color: path.stroke }} /><p className="font-heading text-sm" style={{ color: path.stroke }}>Honest John Says:</p></div>
         <p className="font-body text-gray-300 text-sm leading-relaxed italic">"{data.satirical}"</p>
       </div>
+
+      {/* Top Attractions */}
       <div className="mb-4">
         <p className="font-heading text-xs uppercase tracking-wider text-gray-500 mb-2">Top Attractions</p>
         <div className="space-y-2">
-          {data.highlights?.map(h => (
-            <div key={h} className="flex items-center gap-2 text-sm font-body text-gray-300">
+          {data.highlights?.map((h, i) => (
+            <div key={h} className="flex items-center gap-2 text-sm font-body text-gray-300 animate-in fade-in slide-in-from-left-2"
+              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}>
               <ChevronRight size={12} style={{ color: path.stroke }} />{h}
             </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-wrap gap-2">
+
+      {/* Tags */}
+      <div className="flex flex-wrap gap-2 mb-4">
         {data.tags?.map(t => (
           <span key={t} className="text-xs px-2 py-1 rounded-full font-body"
             style={{ background: `${path.stroke}15`, color: path.stroke, border: `1px solid ${path.stroke}30` }}>{t}</span>
         ))}
       </div>
+
+      {/* Ask Honest John button */}
+      <button
+        onClick={() => {
+          const chatBtn = document.querySelector('[data-testid="chat-open-btn"]');
+          if (chatBtn) chatBtn.click();
+          setTimeout(() => {
+            const input = document.querySelector('[data-testid="chat-input"]');
+            if (input) {
+              const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+              nativeInputValueSetter.call(input, `Tell me about ${data.name}`);
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }, 400);
+        }}
+        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-heading transition-all hover:scale-[1.02]"
+        style={{ background: `${path.stroke}15`, border: `1px solid ${path.stroke}40`, color: path.stroke }}
+        data-testid="ask-john-btn">
+        <MessageCircle size={14} />Ask Honest John About {data.name}
+      </button>
+
       <div className="mt-4 flex items-start gap-2 text-xs text-gray-600 font-body">
         <AlertTriangle size={12} className="flex-shrink-0 mt-0.5 text-[#FF007F]" />
         <span>Not liable for consequences of visiting {data.name}.</span>
@@ -389,6 +816,9 @@ function RegionPanel({ data, path, onClose }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMMUNITY PIN LIST
+   ═══════════════════════════════════════════════════════════════════════════ */
 function CommunityPinList({ pins, addPinMode, onDelete, onUpvote, onFlag, user, onOpenAuth }) {
   if (addPinMode) return (
     <div className="flex flex-col items-center justify-center h-48 text-center">
@@ -421,12 +851,12 @@ function CommunityPinList({ pins, addPinMode, onDelete, onUpvote, onFlag, user, 
         <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
           {pins.map(pin => {
             const color = CAT_COLORS[pin.category] || "#aaa";
+            const icon = CAT_ICONS[pin.category] || "📌";
             const hasVoted = user && (pin.voters || []).includes(user.id);
             const isOwner = user && pin.submitter_user_id === user.id;
             return (
               <div key={pin.id} className="glass-panel p-3 flex items-start gap-3" data-testid={`pin-item-${pin.id}`}>
-                <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                  style={{ background: color, boxShadow: `0 0 5px ${color}` }} />
+                <div className="text-sm mt-0.5 flex-shrink-0">{icon}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                     <p className="font-heading text-white text-sm">{pin.name}</p>
@@ -439,7 +869,6 @@ function CommunityPinList({ pins, addPinMode, onDelete, onUpvote, onFlag, user, 
                     <span className="text-xs text-gray-600 font-body truncate">{pin.submitter_name || "Anonymous"}</span>
                   </div>
                 </div>
-                {/* Actions */}
                 <div className="flex flex-col gap-1 flex-shrink-0">
                   <button onClick={() => onUpvote(pin)} data-testid={`upvote-pin-${pin.id}`}
                     className="flex items-center gap-1 text-xs px-2 py-1 rounded transition-all"

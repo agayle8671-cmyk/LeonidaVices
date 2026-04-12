@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Map, Route, ArrowLeftRight, MessageCircle, ExternalLink, Star, AlertTriangle, ZoomIn, HelpCircle } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import NewsSectionV2 from "./NewsSectionV2";
+import IntelBureau from "./IntelBureau";
 import { useLaunch } from "../contexts/LaunchContext";
 
 const HERO_BG = "https://images.unsplash.com/photo-1580650897120-0aafc3344a97?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxNaWFtaSUyMGJlYWNoJTIwbmlnaHQlMjBuZW9ufGVufDB8fHx8MTc3NTk3NDM2NHww&ixlib=rb-4.1.0&q=85";
@@ -26,14 +27,14 @@ const HARDWARE = [
 export default function LandingPage() {
   const { isLaunched } = useLaunch();
   return (
-    <div className="page-content bg-[#050505]">
+    <div className="page-content relative"
+      style={{ backgroundImage: `url(${HERO_BG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed" }}>
       {/* ── HERO ── */}
       <section
         className="relative min-h-screen flex items-center justify-center text-center px-4"
-        style={{ backgroundImage: `url(${HERO_BG})`, backgroundSize: "cover", backgroundPosition: "center" }}
         data-testid="hero-section"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-[#050505]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#050505]/95" />
         <div className="absolute inset-0 pointer-events-none opacity-5"
           style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.1) 2px, rgba(0,229,255,0.1) 4px)" }} />
 
@@ -100,7 +101,7 @@ export default function LandingPage() {
       <div className="neon-divider" />
 
       {/* ── FEATURES BENTO ── */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
+      <section className="max-w-7xl mx-auto px-4 py-14" style={{ background: "rgba(5,5,5,0.97)" }}>
         <div className="text-center mb-10">
           <p className="font-accent text-[#FF007F] text-xl mb-2">Your Complete Guide</p>
           <h2 className="font-heading text-3xl sm:text-5xl text-white">What Awaits in Leonida</h2>
@@ -140,7 +141,7 @@ export default function LandingPage() {
       <div className="neon-divider" />
 
       {/* ── REGIONS ── */}
-      <section className="max-w-7xl mx-auto px-4 py-14">
+      <section className="max-w-7xl mx-auto px-4 py-14" style={{ background: "rgba(5,5,5,0.97)" }}>
         <div className="text-center mb-8">
           <p className="font-accent text-[#00E5FF] text-xl mb-2">Six Extraordinary Destinations</p>
           <h2 className="font-heading text-3xl sm:text-5xl text-white">The Regions of Leonida</h2>
@@ -167,7 +168,15 @@ export default function LandingPage() {
 
       <div className="neon-divider" />
 
-      <NewsSectionV2 />
+      <div style={{ background: "rgba(5,5,5,0.97)" }}>
+        <NewsSectionV2 />
+      </div>
+
+      <div className="neon-divider" />
+
+      <div style={{ background: "rgba(5,5,5,0.97)" }}>
+        <IntelBureau />
+      </div>
 
       <div className="neon-divider" />
 

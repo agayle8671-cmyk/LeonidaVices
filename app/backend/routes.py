@@ -476,3 +476,123 @@ async def set_launch_status(body: LaunchStatusUpdate, request: Request):
         upsert=True,
     )
     return {"launched": body.launched, "manual_override": body.launched}
+
+# ─────────────────────────── REDDIT INTELLIGENCE BUREAU ──────────────────────
+REDDIT_SUBS = ["GTA6", "GTA", "rockstar"]
+REDDIT_CACHE = {"data": None, "fetched_at": None}
+REDDIT_CACHE_TTL = 900  # 15 minutes
+
+FLAIR_CATEGORY_MAP = {
+    "news": "confirmed", "official": "confirmed", "confirmed": "confirmed",
+    "leak": "hot_lead", "leaks": "hot_lead", "rumor": "hot_lead", "rumour": "hot_lead",
+    "theory": "unverified", "speculation": "unverified", "discussion": "unverified",
+    "debunked": "debunked", "fake": "debunked", "false": "debunked",
+    "meme": "chatter", "humor": "chatter", "shitpost": "chatter",
+}
+
+def _classify_flair(flair_text: str) -> str:
+    if not flair_text:
+        return "unverified"
+    fl = flair_text.lower().strip()
+    for keyword, category in FLAIR_CATEGORY_MAP.items():
+        if keyword in fl:
+            return category
+    return "unverified"
+
+def _heat_score(ups: int, comments: int, age_hours: float) -> int:
+    """Calculate a 1-10 heat score based on engagement velocity."""
+    if age_hours < 0.1:
+        age_hours = 0.1
+    velocity = (ups + comments * 2) / age_hours
+    if velocity > 500: return 10
+    if velocity > 200: return 9
+    if velocity > 100: return 8
+    if velocity > 50:  return 7
+    if velocity > 25:  return 6
+    if velocity > 10:  return 5
+    if velocity > 5:   return 4
+    if velocity > 2:   return 3
+    return 2
+
+@main_router.get("/intel")
+async def get_intel():
+    now = datetime.now(timezone.utc)
+
+    # Return cache if fresh
+    if (REDDIT_CACHE["data"] and REDDIT_CACHE["fetched_at"]
+            and (now - REDDIT_CACHE["fetched_at"]).total_seconds() < REDDIT_CACHE_TTL):
+        return REDDIT_CACHE["data"]
+
+    all_posts = []
+    async with _httpx.AsyncClient(timeout=10, follow_redirects=True) as client:
+        for sub in REDDIT_SUBS:
+            try:
+                resp = await client.get(
+                    f"https://www.reddit.com/r/{sub}/hot.json?limit=30",
+                    headers={"User-Agent": "LeonidaVices/1.0 (VCNN Intelligence Bureau)"}
+                )
+                if resp.status_code != 200:
+                    continue
+                data = resp.json()
+                for child in data.get("data", {}).get("children", []):
+                    post = child.get("data", {})
+                    title = post.get("title", "")
+                    # Filter: must be GTA 6 related
+                    title_lower = title.lower()
+                    is_relevant = any(kw in title_lower for kw in GTA6_KEYWORDS)
+                    # For r/GTA6 sub, everything is relevant
+                    if sub == "GTA6":
+                        is_relevant = True
+                    if not is_relevant:
+                        continue
+                    if post.get("stickied"):
+                        continue
+
+                    created_utc = post.get("created_utc", now.timestamp())
+                    age_hours = max(0.1, (now.timestamp() - created_utc) / 3600)
+
+                    all_posts.append({
+                        "id": post.get("id", uuid.uuid4().hex[:8]),
+                        "title": title,
+                        "category": _classify_flair(post.get("link_flair_text", "")),
+                        "heat": _heat_score(post.get("ups", 0), post.get("num_comments", 0), age_hours),
+                        "engagement": post.get("ups", 0),
+                        "comments": post.get("num_comments", 0),
+                        "age_hours": round(age_hours, 1),
+                        "flair": post.get("link_flair_text") or None,
+                        "sub": sub,
+                    })
+            except Exception as e:
+                logger.warning(f"Reddit scrape failed for r/{sub}: {e}")
+
+    # Sort by heat score descending, then engagement
+    all_posts.sort(key=lambda p: (p["heat"], p["engagement"]), reverse=True)
+    # Dedupe by title similarity (take first 25)
+    seen_titles = set()
+    deduplicated = []
+    for p in all_posts:
+        key = p["title"][:50].lower()
+        if key not in seen_titles:
+            seen_titles.add(key)
+            deduplicated.append(p)
+        if len(deduplicated) >= 25:
+            break
+
+    # Calculate overall hype meter
+    avg_heat = sum(p["heat"] for p in deduplicated) / max(len(deduplicated), 1)
+    total_engagement = sum(p["engagement"] for p in deduplicated)
+
+    result = {
+        "posts": deduplicated,
+        "hype_level": min(10, round(avg_heat)),
+        "total_engagement": total_engagement,
+        "post_count": len(deduplicated),
+        "sources_checked": len(REDDIT_SUBS),
+        "last_updated": now.isoformat(),
+    }
+
+    REDDIT_CACHE["data"] = result
+    REDDIT_CACHE["fetched_at"] = now
+
+    return result
+
