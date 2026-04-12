@@ -1,0 +1,118 @@
+{
+  "theme": "dark",
+  "archetype": "Electric & Neon (Archetype 7 - GTA 6 Vice City Aesthetic)",
+  "vibe": "Satirical, villainous, retro-futuristic travel agency. Danger rebranded as luxury.",
+  "colors": {
+    "background": "#050505",
+    "surface": "#0F0C29",
+    "surface_glass": "rgba(15, 12, 41, 0.7)",
+    "primary": "#FF007F",
+    "primary_glow": "rgba(255, 0, 127, 0.5)",
+    "secondary": "#00E5FF",
+    "secondary_glow": "rgba(0, 229, 255, 0.5)",
+    "accent": "#FFE600",
+    "danger": "#FF2A2A",
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A19FB2",
+      "muted": "#5C5A6D"
+    },
+    "border": "rgba(255, 255, 255, 0.1)"
+  },
+  "typography": {
+    "heading_font": "Righteous",
+    "body_font": "Outfit",
+    "accent_font": "Caveat",
+    "hierarchy": {
+      "h1": "text-5xl sm:text-6xl tracking-tighter drop-shadow-[0_0_15px_rgba(255,0,127,0.8)]",
+      "h2": "text-3xl sm:text-4xl tracking-tight text-white",
+      "h3": "text-xl sm:text-2xl text-cyan-400",
+      "body": "text-base text-gray-300 leading-relaxed",
+      "overline": "text-sm uppercase tracking-[0.2em] text-pink-500 font-bold",
+      "handwritten": "font-accent text-3xl text-yellow-400 -rotate-3"
+    },
+    "installation_instructions": "Add Google Fonts: Righteous, Outfit, Caveat"
+  },
+  "layout_and_spacing": {
+    "philosophy": "High tension, bento grids for structured chaos, wide margins.",
+    "bento_grid": {
+      "container": "grid grid-cols-1 md:grid-cols-12 gap-6 p-4 md:p-8",
+      "map_section": "col-span-1 md:col-span-8 row-span-2 min-h-[500px] md:min-h-[70vh]",
+      "chat_widget": "col-span-1 md:col-span-4 row-span-2",
+      "hardware_ad": "col-span-1 md:col-span-4 row-span-1",
+      "comparison_slider": "col-span-1 md:col-span-8 row-span-1"
+    },
+    "surface_styles": {
+      "glass_panel": "backdrop-blur-xl bg-[#0F0C29]/70 border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
+      "neon_card": "bg-black border border-[#FF007F]/50 rounded-xl relative overflow-hidden group hover:border-[#FF007F] transition-colors duration-300",
+      "neon_glow": "absolute inset-0 bg-gradient-to-r from-[#FF007F]/0 via-[#FF007F]/10 to-[#FF007F]/0 opacity-0 group-hover:opacity-100 transition-opacity"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#FF007F] hover:bg-[#FF007F]/80 text-white font-bold py-3 px-6 rounded-lg shadow-[0_0_15px_rgba(255,0,127,0.5)] transition-all uppercase tracking-wider",
+      "secondary": "bg-transparent border-2 border-[#00E5FF] text-[#00E5FF] hover:bg-[#00E5FF]/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] font-bold py-3 px-6 rounded-lg transition-all uppercase tracking-wider"
+    },
+    "map": {
+      "style": "Full-screen custom SVG or interactive canvas layout. Must use deep indigo background with glowing cyan and pink paths for the A* Route planner.",
+      "markers": "Use glowing pulsing dots for POIs. Hovering over a POI should trigger a glitchy/retro info panel with satirical descriptions.",
+      "regions": "Vice City, Grassrivers, Leonida Keys, Port Gellhorn, Ambrosia, Mt. Kalaga NP"
+    },
+    "comparison_slider": {
+      "style": "Vertical or horizontal slider using react-compare-slider or similar. Split screen showing 'Boring Real Miami' vs 'Deadly Luxury Leonida'.",
+      "handle": "Neon pink glowing handle with 'drag' arrows."
+    },
+    "chatbot": {
+      "style": "Retro terminal window aesthetic for the chat interface. Monospace fonts for user input, but 'Honest John' responds with his avatar and sleazy dialogue.",
+      "avatar_border": "border-2 border-[#FFE600] rounded-full shadow-[0_0_10px_rgba(255,230,0,0.8)]"
+    }
+  },
+  "media": {
+    "hero_background": {
+      "url": "https://images.unsplash.com/photo-1580650897120-0aafc3344a97?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxNaWFtaSUyMGJlYWNoJTIwbmlnaHQlMjBuZW9ufGVufDB8fHx8MTc3NTk3NDM2NHww&ixlib=rb-4.1.0&q=85",
+      "description": "Neon-lit Miami street scene at night. Apply a heavy gradient overlay (black to transparent) to ensure text legibility.",
+      "usage": "Landing page hero background"
+    },
+    "miami_before": {
+      "url": "https://images.unsplash.com/photo-1563664947988-41e72a519155?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxNaWFtaSUyMGJlYWNoJTIwc3VubnklMjBkYXl8ZW58MHx8fHwxNzc1OTc0MzY0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Sunny day at a Miami guard tower.",
+      "usage": "Left side of the Before/After Comparison Slider"
+    },
+    "leonida_after": {
+      "url": "https://images.unsplash.com/photo-1578742903196-42ce22984ec9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwyfHxNaWFtaSUyMGJlYWNoJTIwbmlnaHQlMjBuZW9ufGVufDB8fHx8MTc3NTk3NDM2NHww&ixlib=rb-4.1.0&q=85",
+      "description": "Neon-lit car/building at night to represent Leonida's nightlife and danger.",
+      "usage": "Right side of the Before/After Comparison Slider"
+    },
+    "honest_john_avatar": {
+      "url": "https://images.pexels.com/photos/8891417/pexels-photo-8891417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Man in Hawaiian shirt gesturing, looks like a sleazy travel agent.",
+      "usage": "Avatar for the AI Chatbot Honest John"
+    },
+    "neon_flamingo_accent": {
+      "url": "https://images.unsplash.com/photo-1577638786478-83b176b704c1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxyZXRybyUyMG5lb24lMjBmbGFtaW5nb3xlbnwwfHx8fDE3NzU5NzQzNjR8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Pink flamingo neon sign.",
+      "usage": "Decorative element or background for the Chatbot widget"
+    },
+    "hardware_ad": {
+      "url": "https://images.unsplash.com/photo-1679766900523-d8e1a1393d1f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxnYW1pbmclMjBwYyUyMHNldHVwJTIwbmVvbnxlbnwwfHx8fDE3NzU5NzQzNDl8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Neon gaming PC setup.",
+      "usage": "Affiliate section for RTX 5090 hardware recommendations."
+    }
+  },
+  "animation_guidelines": {
+    "hover_states": "All cards and buttons must have glowing hover states using drop-shadow and border color transitions.",
+    "glitch_effect": "Apply subtle CSS glitch effects to headings periodically to emphasize the 'hacked/GTA' aesthetic.",
+    "page_transitions": "Use fast, snappy transitions, avoiding slow fades. The UI should feel responsive and slightly chaotic like a high-speed pursuit."
+  },
+  "testing": {
+    "attributes": "All interactive elements (buttons, sliders, map regions, chat inputs) MUST have data-testid attributes (e.g., data-testid='map-region-vice-city', data-testid='chat-submit-button')."
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the dark theme. Do NOT use pure white backgrounds anywhere.",
+    "Implement the bento grid for the landing page dashboard.",
+    "Use Shadcn components but heavily strip them of the default 'Vercel' look; apply the surface_styles defined here.",
+    "The Map must be an interactive SVG (use a library or raw SVG paths) with clickable paths for 'Vice City', 'Grassrivers', etc.",
+    "For the comparison slider, use a library like react-compare-slider or framer-motion to create the drag effect.",
+    "Integrate the 'Honest John' chatbot using the provided avatar and ensure responses reflect the villainous/satirical tone."
+  ]
+}
