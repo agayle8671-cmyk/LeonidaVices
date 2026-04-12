@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { X, MapPin, AlertTriangle, Star, ChevronRight, Plus, Clock, Check, Trash2, ThumbsUp, Flag, CheckCircle, Lock, ZoomIn, ZoomOut, Maximize, MessageCircle } from "lucide-react";
+import { X, MapPin, AlertTriangle, Star, ChevronRight, Plus, Clock, Check, Trash2, ThumbsUp, Flag, CheckCircle, Lock, ZoomIn, ZoomOut, Maximize, MessageCircle, Ruler, Share2, Eye, Flame, Moon, Link2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import REGIONS_DATA from "../data/regionsData";
 
@@ -30,6 +30,52 @@ const REGION_PATHS = [
   { id: "leonida-keys", name: "Leonida Keys", path: "M 612,590 L 738,548 L 795,570 L 805,640 L 732,665 L 643,650 L 617,622 Z", base: "#001828", hover: "#003050", stroke: "#00BFFF", labelX: 712, labelY: 625 },
 ];
 
+const CATEGORIES = ["landmark", "hideout", "business", "easter_egg", "scenic", "criminal", "other"];
+const CAT_COLORS = { landmark: "#FFE600", hideout: "#FF007F", business: "#00E5FF", easter_egg: "#39FF14", scenic: "#00BFFF", criminal: "#FF2A2A", other: "#aaa" };
+const CAT_ICONS = { landmark: "📍", hideout: "🏚️", business: "💼", easter_egg: "🥚", scenic: "📸", criminal: "💀", other: "📌" };
+const CAT_LABELS = { landmark: "Landmarks", hideout: "Hideouts", business: "Business", easter_egg: "Easter Eggs", scenic: "Scenic", criminal: "Criminal", other: "Other" };
+const LS_X = 130, LS_Y = 95, LS_W = 545, LS_H = 430;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIELD EVIDENCE PHOTOS — Honest John's field agents (Unsplash themed)
+   ═══════════════════════════════════════════════════════════════════════════ */
+const FIELD_EVIDENCE = {
+  "vice-city": [
+    { url: "https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=400&q=80", label: "Ocean Drive surveillance", time: "02:47 AM" },
+    { url: "https://images.unsplash.com/photo-1535498730771-e735b998cd64?w=400&q=80", label: "Downtown nightlife recon", time: "11:32 PM" },
+    { url: "https://images.unsplash.com/photo-1506966953602-c20cc11f75e3?w=400&q=80", label: "Beach approach vector", time: "06:15 AM" },
+  ],
+  "grassrivers": [
+    { url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80", label: "Swamp access point", time: "04:20 AM" },
+    { url: "https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?w=400&q=80", label: "Thrillbilly territory", time: "09:51 PM" },
+  ],
+  "ambrosia": [
+    { url: "https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&q=80", label: "Sugar Mill exterior", time: "01:33 PM" },
+    { url: "https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=400&q=80", label: "Agricultural corridor", time: "10:08 AM" },
+  ],
+  "port-gellhorn": [
+    { url: "https://images.unsplash.com/photo-1494412574643-ff11b0a5eb19?w=400&q=80", label: "Dock smuggler activity", time: "03:12 AM" },
+    { url: "https://images.unsplash.com/photo-1559827291-bce5697dcb68?w=400&q=80", label: "Gulf refinery perimeter", time: "07:45 PM" },
+  ],
+  "mt-kalaga": [
+    { url: "https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80", label: "Summit trail entry", time: "05:30 AM" },
+    { url: "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?w=400&q=80", label: "Deep forest canopy", time: "02:16 PM" },
+  ],
+  "leonida-keys": [
+    { url: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&q=80", label: "Honda Bridge approach", time: "08:27 AM" },
+    { url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&q=80", label: "Key island anchorage", time: "04:55 PM" },
+  ],
+};
+
+const RULER_QUOTES = [
+  "That's a quick jog if the gators aren't hungry.",
+  "Honest John recommends a helicopter. Or running shoes.",
+  "You could walk that in... well, don't walk it.",
+  "Short enough to sprint, long enough to regret it.",
+  "Pack a lunch. And body armor.",
+  "The scenic route! Also the only route.",
+];
+
 const POIS = [
   { id: "ocean-drive", name: "Ocean Drive", x: 695, y: 445, icon: "🏖️" },
   { id: "macarthur-causeway", name: "MacArthur Causeway", x: 648, y: 432, icon: "🌉" },
@@ -40,10 +86,7 @@ const POIS = [
   { id: "gellhorn-port", name: "Gellhorn Port", x: 90, y: 200, icon: "⚓" },
 ];
 
-const CATEGORIES = ["landmark", "hideout", "business", "easter_egg", "scenic", "criminal", "other"];
-const CAT_COLORS = { landmark: "#FFE600", hideout: "#FF007F", business: "#00E5FF", easter_egg: "#39FF14", scenic: "#00BFFF", criminal: "#FF2A2A", other: "#aaa" };
-const CAT_ICONS = { landmark: "📍", hideout: "🏚️", business: "💼", easter_egg: "🥚", scenic: "📸", criminal: "💀", other: "📌" };
-const LS_X = 130, LS_Y = 95, LS_W = 545, LS_H = 430;
+
 
 /* ═══════════════════════════════════════════════════════════════════════════
    ZOOM / PAN CONSTANTS
@@ -97,6 +140,27 @@ export default function InteractiveMap() {
   const containerRef = useRef(null);
   const { user, getHeaders, openAuth } = useAuth();
 
+  // ── Feature 1: Map Mode ──
+  const [mapMode, setMapMode] = useState("normal"); // normal | heatmap | nightvision
+
+  // ── Feature 2: Category Filters ──
+  const [activeCategories, setActiveCategories] = useState(new Set(CATEGORIES));
+  const toggleCategory = (cat) => {
+    setActiveCategories(prev => {
+      const next = new Set(prev);
+      next.has(cat) ? next.delete(cat) : next.add(cat);
+      return next;
+    });
+  };
+
+  // ── Feature 3: Distance Ruler ──
+  const [rulerMode, setRulerMode] = useState(false);
+  const [rulerPoints, setRulerPoints] = useState([]); // [{x,y}, {x,y}]
+  const [rulerQuote, setRulerQuote] = useState("");
+
+  // ── Feature 4: Shareable Links ──
+  const [linkCopied, setLinkCopied] = useState(false);
+
   // ── Zoom / Pan State ──
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -120,10 +184,35 @@ export default function InteractiveMap() {
     axios.get(`${API}/community/pois`, { headers: getHeaders() })
       .then(r => setCommunityPins(r.data))
       .catch(() => {});
+    // Feature 4: Read URL params for shareable links
+    const params = new URLSearchParams(window.location.search);
+    const regionParam = params.get("region");
+    if (regionParam && REGION_PATHS.find(r => r.id === regionParam)) {
+      setSelected(regionParam);
+      // Zoom to region
+      const region = REGION_PATHS.find(r => r.id === regionParam);
+      if (region) {
+        setTimeout(() => {
+          setZoom(2.2);
+          const cx = BASE_VIEWBOX.w / 2;
+          const cy = BASE_VIEWBOX.h / 2;
+          setPan({ x: (cx - region.labelX) * 0.8, y: (cy - region.labelY) * 0.8 });
+        }, 300);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getRegionData = (id) => regions.find(r => r.id === id);
+
+  // Feature 4: Share link
+  const shareRegionLink = (regionId) => {
+    const url = `${window.location.origin}/map?region=${regionId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    });
+  };
 
   // ── Compute viewBox from zoom + pan ──
   const getViewBox = useCallback(() => {
@@ -266,13 +355,26 @@ export default function InteractiveMap() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom]);
 
-  // ── Pin placement (with zoom-aware coordinates) ──
+  // ── Pin placement / Ruler clicks (with zoom-aware coordinates) ──
   const handleSvgClick = useCallback((e) => {
     if (isPanning) return;
+    // Feature 3: Ruler mode
+    if (rulerMode && svgRef.current) {
+      const { x, y } = svgPoint(e.clientX, e.clientY);
+      setRulerPoints(prev => {
+        if (prev.length >= 2) return [{ x, y }]; // Reset with new first point
+        const next = [...prev, { x, y }];
+        if (next.length === 2) {
+          setRulerQuote(RULER_QUOTES[Math.floor(Math.random() * RULER_QUOTES.length)]);
+        }
+        return next;
+      });
+      return;
+    }
     if (!addPinMode || !svgRef.current) return;
     const { x, y } = svgPoint(e.clientX, e.clientY);
     setPendingPin({ x, y });
-  }, [addPinMode, isPanning, svgPoint]);
+  }, [addPinMode, isPanning, svgPoint, rulerMode]);
 
   const submitPin = async () => {
     if (!pendingPin || !pinForm.name.trim()) return;
@@ -346,9 +448,29 @@ export default function InteractiveMap() {
                 <Clock size={10} />GTA V Scale
               </button>
             </div>
+            {/* Feature 1: Map Mode Switcher */}
+            <div className="flex items-center gap-1 glass-panel p-1 rounded-lg">
+              <button onClick={() => setMapMode("normal")} title="Normal"
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${mapMode === "normal" ? "bg-[#00E5FF]/20 text-[#00E5FF]" : "text-gray-600"}`}>
+                <Eye size={12} />
+              </button>
+              <button onClick={() => setMapMode("heatmap")} title="Danger Heatmap"
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${mapMode === "heatmap" ? "bg-[#FF007F]/20 text-[#FF007F]" : "text-gray-600"}`}>
+                <Flame size={12} />
+              </button>
+              <button onClick={() => setMapMode("nightvision")} title="Night Vision"
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${mapMode === "nightvision" ? "bg-[#39FF14]/20 text-[#39FF14]" : "text-gray-600"}`}>
+                <Moon size={12} />
+              </button>
+            </div>
+            {/* Feature 3: Ruler Tool */}
+            <button onClick={() => { setRulerMode(!rulerMode); setRulerPoints([]); setAddPinMode(false); }}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-heading transition-all ${rulerMode ? "bg-[#FFE600]/20 border border-[#FFE600] text-[#FFE600]" : "glass-panel text-gray-400"}`}>
+              <Ruler size={12} />{rulerMode ? "Measuring..." : "Ruler"}
+            </button>
             {/* Add Pin */}
             {user ? (
-              <button onClick={() => { setAddPinMode(!addPinMode); setPendingPin(null); }} data-testid="add-pin-btn"
+              <button onClick={() => { setAddPinMode(!addPinMode); setPendingPin(null); setRulerMode(false); }} data-testid="add-pin-btn"
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-heading transition-all ${addPinMode ? "bg-[#39FF14]/20 border border-[#39FF14] text-[#39FF14]" : "glass-panel text-gray-300"}`}>
                 <Plus size={12} />{addPinMode ? "Cancel" : "Add Pin"}
               </button>
@@ -368,12 +490,47 @@ export default function InteractiveMap() {
           </div>
         )}
 
+        {/* Feature 2: POI Category Filter Bar */}
+        <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          <span className="font-body text-gray-600 text-[10px] uppercase tracking-wider mr-1">Filter:</span>
+          {CATEGORIES.map(cat => {
+            const active = activeCategories.has(cat);
+            const color = CAT_COLORS[cat];
+            const count = communityPins.filter(p => p.category === cat).length;
+            return (
+              <button key={cat} onClick={() => toggleCategory(cat)}
+                className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all"
+                style={{ background: active ? `${color}15` : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${active ? color + "40" : "rgba(255,255,255,0.06)"}`,
+                  color: active ? color : "#555", opacity: active ? 1 : 0.5 }}>
+                {CAT_ICONS[cat]} {CAT_LABELS[cat]}
+                {count > 0 && <span className="ml-0.5 text-[8px] opacity-60">{count}</span>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Ruler mode hint */}
+        {rulerMode && (
+          <div className="mb-2 px-3 py-1.5 rounded-lg text-xs font-body text-[#FFE600] flex items-center gap-2"
+            style={{ background: "rgba(255,230,0,0.08)", border: "1px solid rgba(255,230,0,0.2)" }}>
+            <Ruler size={11} />Click two points on the map to measure distance
+            {rulerPoints.length === 1 && <span className="ml-auto text-[10px] text-gray-500">1st point set — click 2nd</span>}
+          </div>
+        )}
+
         {/* ── MAP SVG WITH ZOOM/PAN ── */}
         <div ref={containerRef} className="relative w-full rounded-xl overflow-hidden"
           style={{ paddingBottom: "75%", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 0 60px rgba(255,0,127,0.08), inset 0 0 80px rgba(0,0,0,0.5)" }}>
           <svg ref={svgRef} viewBox={getViewBox()}
-            className={`absolute inset-0 w-full h-full ${addPinMode ? "cursor-crosshair" : zoom > 1 ? "cursor-grab" : ""} ${isPanning ? "cursor-grabbing" : ""}`}
-            style={{ background: "radial-gradient(ellipse at 60% 70%, #001a33 0%, #000d1f 40%, #000308 100%)", touchAction: "none" }}
+            className={`absolute inset-0 w-full h-full ${rulerMode ? "cursor-crosshair" : addPinMode ? "cursor-crosshair" : zoom > 1 ? "cursor-grab" : ""} ${isPanning ? "cursor-grabbing" : ""}`}
+            style={{
+              background: mapMode === "nightvision"
+                ? "radial-gradient(ellipse at 60% 70%, #001a00 0%, #000d00 40%, #000200 100%)"
+                : "radial-gradient(ellipse at 60% 70%, #001a33 0%, #000d1f 40%, #000308 100%)",
+              touchAction: "none",
+              filter: mapMode === "nightvision" ? "saturate(0.3) brightness(0.8)" : "none",
+            }}
             onClick={handleSvgClick}
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
@@ -385,12 +542,14 @@ export default function InteractiveMap() {
               <radialGradient id="og" cx="60%" cy="70%" r="60%"><stop offset="0%" stopColor="#001f3f" stopOpacity="0.4" /><stop offset="100%" stopColor="#000a15" stopOpacity="0" /></radialGradient>
               <filter id="glow"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
               <filter id="glow-strong"><feGaussianBlur stdDeviation="6" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              {/* Night vision green filter */}
+              <filter id="nightvision"><feColorMatrix type="matrix" values="0.2 0.7 0.1 0 0  0.1 0.9 0.1 0 0  0.1 0.3 0.1 0 0  0 0 0 1 0" /></filter>
               {/* Ocean wave pattern */}
               <pattern id="ocean-waves" x="0" y="0" width="60" height="30" patternUnits="userSpaceOnUse">
-                <path d="M0 15 Q15 5, 30 15 Q45 25, 60 15" fill="none" stroke="rgba(0,229,255,0.06)" strokeWidth="0.8">
+                <path d="M0 15 Q15 5, 30 15 Q45 25, 60 15" fill="none" stroke={mapMode === "nightvision" ? "rgba(57,255,20,0.06)" : "rgba(0,229,255,0.06)"} strokeWidth="0.8">
                   <animateTransform attributeName="transform" type="translate" from="0 0" to="-60 0" dur="8s" repeatCount="indefinite" />
                 </path>
-                <path d="M0 25 Q15 15, 30 25 Q45 35, 60 25" fill="none" stroke="rgba(0,100,200,0.04)" strokeWidth="0.5">
+                <path d="M0 25 Q15 15, 30 25 Q45 35, 60 25" fill="none" stroke={mapMode === "nightvision" ? "rgba(57,255,20,0.04)" : "rgba(0,100,200,0.04)"} strokeWidth="0.5">
                   <animateTransform attributeName="transform" type="translate" from="0 0" to="60 0" dur="12s" repeatCount="indefinite" />
                 </path>
               </pattern>
@@ -433,6 +592,21 @@ export default function InteractiveMap() {
               </circle>
             ))}
 
+            {/* Feature 1: Heatmap overlay rects */}
+            {mapMode === "heatmap" && REGION_PATHS.map(r => {
+              const rd = regions.find(rr => rr.id === r.id);
+              const danger = rd?.danger || 5;
+              const heatColor = danger >= 8 ? "rgba(255,0,50,0.25)" : danger >= 6 ? "rgba(255,140,0,0.2)" : danger >= 4 ? "rgba(255,230,0,0.12)" : "rgba(57,255,20,0.1)";
+              return <path key={`heat-${r.id}`} d={r.path} fill={heatColor} style={{ pointerEvents: "none" }}>
+                <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite" />
+              </path>;
+            })}
+
+            {/* Night vision green overlay */}
+            {mapMode === "nightvision" && (
+              <rect width="880" height="660" fill="rgba(57,255,20,0.03)" style={{ pointerEvents: "none" }} />
+            )}
+
             {/* ── REGION FILLS ── */}
             {REGION_PATHS.map((region) => {
               const isH = hovered === region.id, isS = selected === region.id;
@@ -464,12 +638,24 @@ export default function InteractiveMap() {
                       <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite" />
                     </path>
                   )}
+                  {/* Heatmap danger label */}
+                  {mapMode === "heatmap" && (() => {
+                    const rd = regions.find(rr => rr.id === region.id);
+                    const d = rd?.danger || 5;
+                    const dc = d >= 7 ? "#FF007F" : d >= 5 ? "#FFE600" : "#39FF14";
+                    return (
+                      <text x={region.labelX} y={region.labelY + 16} textAnchor="middle"
+                        fill={dc} fontSize={10} fontFamily="Righteous" style={{ pointerEvents: "none" }}>
+                        ⚠ {d}/10
+                      </text>
+                    );
+                  })()}
                   {/* Region label */}
                   <text x={region.labelX} y={region.labelY} textAnchor="middle"
-                    fill={isH || isS ? region.stroke : "rgba(255,255,255,0.45)"} fontSize={isH || isS ? 13 : 11}
+                    fill={mapMode === "nightvision" ? "#39FF14" : (isH || isS ? region.stroke : "rgba(255,255,255,0.45)")} fontSize={isH || isS ? 13 : 11}
                     fontFamily="Righteous, cursive" fontWeight={isS ? "bold" : "normal"}
                     style={{ pointerEvents: "none", transition: "all 0.3s",
-                      filter: (isS || isH) ? `drop-shadow(0 0 8px ${region.stroke})` : "none" }}>
+                      filter: (isS || isH) ? `drop-shadow(0 0 8px ${mapMode === "nightvision" ? "#39FF14" : region.stroke})` : "none" }}>
                     {region.name}
                   </text>
                 </g>
@@ -504,8 +690,8 @@ export default function InteractiveMap() {
               </g>
             ))}
 
-            {/* ── COMMUNITY PINS ── */}
-            {communityPins.map(pin => {
+            {/* ── COMMUNITY PINS (filtered by active categories) ── */}
+            {communityPins.filter(p => activeCategories.has(p.category)).map(pin => {
               const color = CAT_COLORS[pin.category] || "#aaa";
               const icon = CAT_ICONS[pin.category] || "📌";
               return (
@@ -567,12 +753,74 @@ export default function InteractiveMap() {
               <text x={-13} y={4} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize={6} fontFamily="Righteous">W</text>
             </g>
 
+            {/* Feature 3: Ruler line */}
+            {rulerPoints.length >= 1 && (
+              <g style={{ pointerEvents: "none" }}>
+                <circle cx={rulerPoints[0].x} cy={rulerPoints[0].y} r={6} fill="#FFE600" opacity={0.9}
+                  style={{ filter: "drop-shadow(0 0 6px #FFE600)" }} />
+                <circle cx={rulerPoints[0].x} cy={rulerPoints[0].y} r={12} fill="none" stroke="#FFE600" strokeWidth={1} strokeDasharray="3 3" opacity={0.4}>
+                  <animateTransform attributeName="transform" type="rotate" from={`0 ${rulerPoints[0].x} ${rulerPoints[0].y}`} to={`360 ${rulerPoints[0].x} ${rulerPoints[0].y}`} dur="4s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            )}
+            {rulerPoints.length === 2 && (() => {
+              const [p1, p2] = rulerPoints;
+              const dist = Math.round(Math.hypot(p2.x - p1.x, p2.y - p1.y) / 50 * 10) / 10;
+              const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+              return (
+                <g style={{ pointerEvents: "none" }}>
+                  <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
+                    stroke="#FFE600" strokeWidth={2} strokeDasharray="8 4" opacity={0.8}
+                    style={{ filter: "drop-shadow(0 0 4px #FFE600)" }} />
+                  <circle cx={p2.x} cy={p2.y} r={6} fill="#FFE600" opacity={0.9}
+                    style={{ filter: "drop-shadow(0 0 6px #FFE600)" }} />
+                  <rect x={mx - 45} y={my - 24} width={90} height={18} rx={4}
+                    fill="rgba(0,0,0,0.92)" stroke="#FFE600" strokeWidth={0.8} />
+                  <text x={mx} y={my - 12} textAnchor="middle" fill="#FFE600" fontSize={10} fontFamily="Righteous">
+                    {dist} units
+                  </text>
+                  <rect x={mx - 80} y={my + 2} width={160} height={16} rx={3}
+                    fill="rgba(0,0,0,0.85)" />
+                  <text x={mx} y={my + 13} textAnchor="middle" fill="#aaa" fontSize={7} fontFamily="Inter, sans-serif" fontStyle="italic">
+                    {rulerQuote}
+                  </text>
+                </g>
+              );
+            })()}
+
             {/* Vignette overlay */}
             <rect width="880" height="660" fill="url(#vignette)" style={{ pointerEvents: "none" }} />
+
+            {/* Night vision scanline effect */}
+            {mapMode === "nightvision" && (
+              <g style={{ pointerEvents: "none" }}>
+                {Array.from({ length: 33 }, (_, i) => (
+                  <line key={i} x1={0} y1={i * 20} x2={880} y2={i * 20}
+                    stroke="rgba(57,255,20,0.04)" strokeWidth={1} />
+                ))}
+              </g>
+            )}
 
             {/* Watermark */}
             <text x={440} y={648} textAnchor="middle" fill="rgba(255,255,255,0.05)" fontSize={9} fontFamily="Righteous">HONEST JOHN'S TRAVEL AGENCY · LEONIDA MAP · CONFIDENTIAL</text>
           </svg>
+
+          {/* Feature 4: Link copied toast */}
+          {linkCopied && (
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg text-xs font-heading z-20 animate-in fade-in slide-in-from-top-2"
+              style={{ background: "rgba(57,255,20,0.15)", border: "1px solid rgba(57,255,20,0.4)", color: "#39FF14", backdropFilter: "blur(8px)" }}>
+              <Link2 size={10} className="inline mr-1.5" />Link copied to clipboard!
+            </div>
+          )}
+
+          {/* Map mode badge */}
+          {mapMode !== "normal" && (
+            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-heading z-10 flex items-center gap-1"
+              style={{ background: "rgba(5,5,5,0.85)", border: `1px solid ${mapMode === "heatmap" ? "rgba(255,0,127,0.4)" : "rgba(57,255,20,0.4)"}`,
+                color: mapMode === "heatmap" ? "#FF007F" : "#39FF14" }}>
+              {mapMode === "heatmap" ? <><Flame size={10} />DANGER HEATMAP</> : <><Moon size={10} />NIGHT VISION</>}
+            </div>
+          )}
 
           {/* ── ZOOM CONTROLS (overlaid on map) ── */}
           <div className="absolute bottom-3 right-3 flex flex-col gap-1.5 z-10">
@@ -630,7 +878,8 @@ export default function InteractiveMap() {
             submitting={submitting} user={user} />
         ) : selected ? (
           <RegionPanel data={getRegionData(selected)} path={REGION_PATHS.find(r => r.id === selected)}
-            onClose={() => setSelected(null)} dangerAnimated={dangerAnimated} />
+            onClose={() => setSelected(null)} dangerAnimated={dangerAnimated}
+            onShare={() => shareRegionLink(selected)} linkCopied={linkCopied} />
         ) : (
           <CommunityPinList pins={communityPins} addPinMode={addPinMode}
             onDelete={deletePin} onUpvote={upvotePin} onFlag={flagPin}
@@ -700,11 +949,14 @@ function PinForm({ form, setForm, onSubmit, onCancel, submitting, user }) {
 /* ═══════════════════════════════════════════════════════════════════════════
    REGION PANEL — UPGRADED
    ═══════════════════════════════════════════════════════════════════════════ */
-function RegionPanel({ data, path, onClose, dangerAnimated }) {
+function RegionPanel({ data, path, onClose, dangerAnimated, onShare, linkCopied }) {
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
+  const [lightboxImg, setLightboxImg] = useState(null);
   if (!data || !path) return null;
   const dangerColor = data.danger >= 7 ? "#FF007F" : data.danger >= 5 ? "#FFE600" : "#39FF14";
   const dangerWidth = dangerAnimated ? `${data.danger * 10}%` : "0%";
   const img = REGION_IMAGES[data.id];
+  const evidence = FIELD_EVIDENCE[data.id] || [];
 
   return (
     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
@@ -807,6 +1059,61 @@ function RegionPanel({ data, path, onClose, dangerAnimated }) {
         data-testid="ask-john-btn">
         <MessageCircle size={14} />Ask Honest John About {data.name}
       </button>
+
+      {/* Feature 4: Share Link */}
+      <button onClick={onShare}
+        className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-heading transition-all hover:scale-[1.02] mt-2"
+        style={{ background: "rgba(0,229,255,0.08)", border: "1px solid rgba(0,229,255,0.2)", color: "#00E5FF" }}>
+        {linkCopied ? <><Check size={12} />Link Copied!</> : <><Share2 size={12} />Share This Region</>}
+      </button>
+
+      {/* Feature 5: Field Evidence */}
+      {evidence.length > 0 && (
+        <div className="mt-4">
+          <button onClick={() => setEvidenceOpen(!evidenceOpen)}
+            className="w-full flex items-center justify-between text-xs font-heading text-gray-500 uppercase tracking-wider mb-2 hover:text-white transition-colors">
+            <span className="flex items-center gap-1.5"><Eye size={10} />Field Evidence ({evidence.length})</span>
+            <ChevronRight size={10} className={`transition-transform ${evidenceOpen ? "rotate-90" : ""}`} />
+          </button>
+          {evidenceOpen && (
+            <div className="space-y-2">
+              {evidence.map((ev, i) => (
+                <div key={i} className="relative rounded-lg overflow-hidden cursor-pointer group"
+                  onClick={() => setLightboxImg(ev)} style={{ border: `1px solid ${path.stroke}20` }}>
+                  <img src={ev.url} alt={ev.label} className="w-full h-24 object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                    onError={(e) => { e.target.style.display = 'none'; }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)" }} />
+                  <div className="absolute bottom-0 left-0 right-0 p-2">
+                    <p className="font-heading text-[9px] text-white">{ev.label}</p>
+                    <p className="font-body text-[8px] text-gray-500">FIELD AGENT · {ev.time}</p>
+                  </div>
+                  <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded text-[7px] font-heading"
+                    style={{ background: "rgba(255,0,0,0.3)", color: "#FF007F" }}>● REC</div>
+                </div>
+              ))}
+              <p className="font-body text-[9px] text-gray-700 italic text-center">Photos by Honest John's field agents. Authenticity unverified.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxImg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setLightboxImg(null)}>
+          <div className="relative max-w-2xl w-full rounded-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <img src={lightboxImg.url} alt={lightboxImg.label} className="w-full object-cover" />
+            <div className="absolute bottom-0 left-0 right-0 p-4" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)" }}>
+              <p className="font-heading text-sm text-white">{lightboxImg.label}</p>
+              <p className="font-body text-xs text-gray-400">Captured by field agent · {lightboxImg.time}</p>
+            </div>
+            <button onClick={() => setLightboxImg(null)}
+              className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80">
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-4 flex items-start gap-2 text-xs text-gray-600 font-body">
         <AlertTriangle size={12} className="flex-shrink-0 mt-0.5 text-[#FF007F]" />
