@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { Navigation, MapPin, AlertTriangle, Loader2, ChevronRight, ArrowLeftRight, Clock, Shield, Star, Zap, Route as RouteIcon, History } from "lucide-react";
+import { Navigation, MapPin, AlertTriangle, Loader2, ChevronRight, ArrowLeftRight, Clock, Shield, Star, Zap, Route as RouteIcon, History, MousePointer } from "lucide-react";
 import REGIONS_DATA from "../data/regionsData";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -106,15 +106,21 @@ const PARTICLES = generateParticles(20);
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function RoutePlanner() {
-  const [start, setStart] = useState("Vice City");
-  const [end, setEnd] = useState("Mt. Kalaga NP");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [locations, setLocations] = useState({});
   const [recentRoutes, setRecentRoutes] = useState([]);
   const [dangerAnimated, setDangerAnimated] = useState(false);
+  const [hoveredLoc, setHoveredLoc] = useState(null);
+  const [dragging, setDragging] = useState(null); // "start" | "end" | null
+  const [dragPos, setDragPos] = useState(null);    // {x, y} while dragging
   const svgRef = useRef(null);
+
+  // ── Interaction mode: what happens on next click ──
+  const interactionMode = !start ? "set-start" : !end ? "set-end" : "ready";
 
   useEffect(() => {
     axios.get(`${API}/locations`).then(r => {
@@ -122,7 +128,6 @@ export default function RoutePlanner() {
       r.data.forEach(l => { loc[l.name] = { x: l.x, y: l.y }; });
       setLocations(loc);
     }).catch(() => {});
-    // Load recent routes from localStorage
     try {
       const saved = JSON.parse(localStorage.getItem("leonida_recent_routes") || "[]");
       setRecentRoutes(saved);
@@ -137,27 +142,123 @@ export default function RoutePlanner() {
     }
   }, [route]);
 
-  const calculate = async (s = start, e = end) => {
+  const calculate = async (s, e) => {
+    if (!s || !e) return;
     if (s === e) { setError("Pick two different locations, darling."); return; }
     setLoading(true); setError(""); setRoute(null);
     try {
       const { data } = await axios.post(`${API}/route`, { start: s, end: e });
       setRoute(data);
-      // Save to recent
       const entry = { start: s, end: e, distance: data.total_distance, timestamp: Date.now() };
       const updated = [entry, ...recentRoutes.filter(r => !(r.start === s && r.end === e))].slice(0, 5);
       setRecentRoutes(updated);
       localStorage.setItem("leonida_recent_routes", JSON.stringify(updated));
-    } catch (e) {
-      setError(e.response?.data?.detail || "Route not found. Even Honest John can't help you here.");
+    } catch (err) {
+      setError(err.response?.data?.detail || "Route not found. Even Honest John can't help you here.");
     } finally {
       setLoading(false);
     }
   };
 
-  const swapLocations = () => { const tmp = start; setStart(end); setEnd(tmp); };
+  const swapLocations = () => {
+    const tmp = start;
+    setStart(end);
+    setEnd(tmp);
+    if (start && end) calculate(end, tmp);
+  };
+
+  // ── Click a location on the map ──
+  const handleLocationClick = useCallback((name) => {
+    if (!start || (start && end)) {
+      // Starting fresh or resetting
+      setStart(name);
+      setEnd("");
+      setRoute(null);
+      setError("");
+    } else if (start && !end) {
+      if (name === start) return; // Can't set same
+      setEnd(name);
+      calculate(start, name);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start, end]);
+
+  // ── SVG coordinate helper ──
+  const svgPoint = useCallback((clientX, clientY) => {
+    if (!svgRef.current) return null;
+    const pt = svgRef.current.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    const ctm = svgRef.current.getScreenCTM()?.inverse();
+    if (!ctm) return null;
+    const svgPt = pt.matrixTransform(ctm);
+    return { x: svgPt.x, y: svgPt.y };
+  }, []);
+
+  // ── Find nearest location to a point ──
+  const findNearest = useCallback((x, y) => {
+    let best = null, bestDist = Infinity;
+    for (const [name, pos] of Object.entries(locations)) {
+      const d = Math.hypot(pos.x - x, pos.y - y);
+      if (d < bestDist) { bestDist = d; best = name; }
+    }
+    return bestDist < 50 ? best : null; // snap radius of 50 SVG units
+  }, [locations]);
+
+  // ── Drag start ──
+  const handleDragStart = useCallback((which, e) => {
+    e.stopPropagation();
+    setDragging(which);
+    const pt = svgPoint(e.clientX || e.touches?.[0]?.clientX, e.clientY || e.touches?.[0]?.clientY);
+    if (pt) setDragPos(pt);
+  }, [svgPoint]);
+
+  // ── Drag move ──
+  const handleDragMove = useCallback((e) => {
+    if (!dragging) return;
+    const cx = e.clientX || e.touches?.[0]?.clientX;
+    const cy = e.clientY || e.touches?.[0]?.clientY;
+    const pt = svgPoint(cx, cy);
+    if (pt) setDragPos(pt);
+  }, [dragging, svgPoint]);
+
+  // ── Drag end: snap to nearest location ──
+  const handleDragEnd = useCallback(() => {
+    if (!dragging || !dragPos) { setDragging(null); setDragPos(null); return; }
+    const nearest = findNearest(dragPos.x, dragPos.y);
+    if (nearest) {
+      if (dragging === "start" && nearest !== end) {
+        setStart(nearest);
+        if (end) calculate(nearest, end);
+      } else if (dragging === "end" && nearest !== start) {
+        setEnd(nearest);
+        if (start) calculate(start, nearest);
+      }
+    }
+    setDragging(null);
+    setDragPos(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragging, dragPos, findNearest, start, end]);
+
+  // ── Global mouse/touch listeners for drag ──
+  useEffect(() => {
+    if (!dragging) return;
+    const onMove = (e) => handleDragMove(e);
+    const onUp = () => handleDragEnd();
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onMove, { passive: false });
+    window.addEventListener("touchend", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+  }, [dragging, handleDragMove, handleDragEnd]);
 
   const handleSuggested = (r) => { setStart(r.start); setEnd(r.end); calculate(r.start, r.end); };
+  const handleRecent = (r) => { setStart(r.start); setEnd(r.end); calculate(r.start, r.end); };
+  const clearRoute = () => { setStart(""); setEnd(""); setRoute(null); setError(""); };
 
   const buildPathD = (waypoints) => {
     if (!waypoints || waypoints.length < 2) return "";
@@ -185,15 +286,29 @@ export default function RoutePlanner() {
         </div>
 
         {/* ── CONTROLS ── */}
-        <div className="glass-panel p-5 mb-8 max-w-4xl mx-auto" style={{ borderColor: "rgba(0,229,255,0.2)" }}>
+        <div className="glass-panel p-5 mb-4 max-w-4xl mx-auto" style={{ borderColor: "rgba(0,229,255,0.2)" }}>
+          {/* Mode indicator */}
+          <div className="flex items-center gap-2 mb-3 text-xs">
+            <MousePointer size={11} className="text-[#00E5FF]" />
+            <span className="font-body text-gray-400">
+              {interactionMode === "set-start" ? (
+                <><span className="text-[#39FF14] font-heading">Click any location</span> on the map to set your starting point</>
+              ) : interactionMode === "set-end" ? (
+                <><span className="text-[#FF007F] font-heading">Click another location</span> to set your destination — route calculates automatically</>
+              ) : (
+                <><span className="text-[#FFE600] font-heading">Drag</span> the 🟢/🔴 markers to change endpoints · or <button onClick={clearRoute} className="text-[#00E5FF] underline hover:text-white">start over</button></>
+              )}
+            </span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr_auto] gap-3 items-end">
             {/* FROM */}
             <div>
               <label className="font-body text-gray-500 text-xs uppercase tracking-wider block mb-2">From</label>
               <div className="relative">
-                <select value={start} onChange={(e) => setStart(e.target.value)} data-testid="route-start-select"
-                  className="w-full bg-[#0a0a14] border border-[#39FF14]/30 text-white rounded-lg px-3 py-2.5 font-body text-sm focus:border-[#39FF14] focus:outline-none transition-colors appearance-none">
-                  {LOCATIONS_LIST.map(l => <option key={l} value={l}>{LOCATION_META[l].emoji} {l}</option>)}
+                <select value={start} onChange={(e) => { setStart(e.target.value); if (end) calculate(e.target.value, end); }} data-testid="route-start-select"
+                  className="w-full bg-[#0a0a14] border border-[#39FF14]/30 text-white rounded-lg px-3 py-2.5 pl-8 font-body text-sm focus:border-[#39FF14] focus:outline-none transition-colors appearance-none">
+                  {LOCATIONS_LIST.map(l => <option key={l} value={l}>{LOCATION_META[l].emoji}  {l}</option>)}
+                  <option value="">— click map —</option>
                 </select>
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none">{LOCATION_META[start]?.emoji}</div>
               </div>
@@ -211,9 +326,10 @@ export default function RoutePlanner() {
             <div>
               <label className="font-body text-gray-500 text-xs uppercase tracking-wider block mb-2">To</label>
               <div className="relative">
-                <select value={end} onChange={(e) => setEnd(e.target.value)} data-testid="route-end-select"
-                  className="w-full bg-[#0a0a14] border border-[#FF007F]/30 text-white rounded-lg px-3 py-2.5 font-body text-sm focus:border-[#FF007F] focus:outline-none transition-colors appearance-none">
-                  {LOCATIONS_LIST.map(l => <option key={l} value={l}>{LOCATION_META[l].emoji} {l}</option>)}
+                <select value={end} onChange={(e) => { setEnd(e.target.value); if (start) calculate(start, e.target.value); }} data-testid="route-end-select"
+                  className="w-full bg-[#0a0a14] border border-[#FF007F]/30 text-white rounded-lg px-3 py-2.5 pl-8 font-body text-sm focus:border-[#FF007F] focus:outline-none transition-colors appearance-none">
+                  {LOCATIONS_LIST.map(l => <option key={l} value={l}>{LOCATION_META[l].emoji}  {l}</option>)}
+                  <option value="">— click map —</option>
                 </select>
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none">{LOCATION_META[end]?.emoji}</div>
               </div>
@@ -221,7 +337,7 @@ export default function RoutePlanner() {
             </div>
 
             {/* CALCULATE */}
-            <button onClick={() => calculate()} disabled={loading} data-testid="route-calculate-btn"
+            <button onClick={() => calculate(start, end)} disabled={loading || !start || !end} data-testid="route-calculate-btn"
               className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto px-6 self-center mb-4 sm:mb-0">
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Navigation size={16} />}
               {loading ? "Calculating..." : "Plan Route"}
@@ -310,70 +426,122 @@ export default function RoutePlanner() {
                 {/* ── ROUTE PATH ── */}
                 {route && route.waypoints?.length > 1 && (
                   <>
-                    {/* Wide glow under route */}
                     <path d={buildPathD(route.waypoints)} fill="none"
                       stroke="url(#route-gradient)" strokeWidth={8} strokeOpacity={0.2} strokeLinecap="round" strokeLinejoin="round"
-                      style={{ filter: "url(#route-glow-strong)" }} />
-                    {/* Main gradient path */}
+                      style={{ filter: "url(#route-glow-strong)", pointerEvents: "none" }} />
                     <path d={buildPathD(route.waypoints)} fill="none"
                       stroke="url(#route-gradient)" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"
-                      strokeDasharray="10 5" data-testid="route-path-line">
+                      strokeDasharray="10 5" data-testid="route-path-line" style={{ pointerEvents: "none" }}>
                       <animate attributeName="stroke-dashoffset" from="0" to="-60" dur="2s" repeatCount="indefinite" />
                     </path>
-
-                    {/* Animated vehicle dot */}
                     <VehicleDot pathD={buildPathD(route.waypoints)} />
-
-                    {/* Waypoint markers */}
-                    {route.waypoints.map((w, i) => {
-                      const isStart = i === 0;
-                      const isEnd = i === route.waypoints.length - 1;
-                      const meta = LOCATION_META[w.name];
-                      const color = isStart ? "#39FF14" : isEnd ? "#FF007F" : (meta?.color || "#FFE600");
-                      return (
-                        <g key={i}>
-                          {/* Pulse ring on start/end */}
-                          {(isStart || isEnd) && (
-                            <circle cx={w.x} cy={w.y} r={12} fill="none" stroke={color} strokeWidth={1} opacity={0.4}>
-                              <animate attributeName="r" values="10;18;10" dur="2.5s" repeatCount="indefinite" />
-                              <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2.5s" repeatCount="indefinite" />
-                            </circle>
-                          )}
-                          {/* Main marker */}
-                          <circle cx={w.x} cy={w.y} r={isStart || isEnd ? 8 : 5}
-                            fill={color} style={{ filter: `drop-shadow(0 0 6px ${color})` }} />
-                          <circle cx={w.x} cy={w.y} r={isStart || isEnd ? 4 : 2} fill="#000" opacity={0.3} />
-                          {/* Flag icon for start/end */}
-                          {isStart && <text x={w.x} y={w.y - 14} textAnchor="middle" fontSize={12}>🟢</text>}
-                          {isEnd && <text x={w.x} y={w.y - 14} textAnchor="middle" fontSize={12}>🔴</text>}
-                          {/* Label */}
-                          <text x={w.x} y={w.y + (isStart || isEnd ? 20 : 15)} textAnchor="middle"
-                            fill={color} fontSize={isStart || isEnd ? 10 : 8} fontFamily="Righteous, cursive"
-                            style={{ filter: `drop-shadow(0 0 4px ${color})` }}>
-                            {w.name}
-                          </text>
-                        </g>
-                      );
-                    })}
                   </>
                 )}
 
-                {/* Default location dots when no route */}
-                {!route && Object.entries(locations).map(([name, pos]) => {
+                {/* Location dots — ALWAYS visible, clickable, hoverable */}
+                {Object.entries(locations).map(([name, pos]) => {
                   const meta = LOCATION_META[name];
+                  const isStart = name === start;
+                  const isEnd = name === end;
+                  const isHovered = hoveredLoc === name;
+                  const isOnRoute = route?.path?.includes(name);
+                  const color = isStart ? "#39FF14" : isEnd ? "#FF007F" : (meta?.color || "#fff");
+                  const isEndpoint = isStart || isEnd;
+                  // While dragging, show drag ghost position instead
+                  const displayX = (dragging === "start" && isStart && dragPos) ? dragPos.x
+                    : (dragging === "end" && isEnd && dragPos) ? dragPos.x : pos.x;
+                  const displayY = (dragging === "start" && isStart && dragPos) ? dragPos.y
+                    : (dragging === "end" && isEnd && dragPos) ? dragPos.y : pos.y;
+
                   return (
-                    <g key={name}>
-                      <circle cx={pos.x} cy={pos.y} r={5} fill={meta?.color || "#fff"} opacity={0.5}
-                        style={{ filter: `drop-shadow(0 0 4px ${meta?.color || "#fff"})` }}>
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite" />
-                      </circle>
-                      <text x={pos.x} y={pos.y - 9} textAnchor="middle"
-                        fill={meta?.color || "rgba(255,255,255,0.5)"} fontSize={8} fontFamily="Righteous, cursive">
+                    <g key={name}
+                      onClick={(e) => { e.stopPropagation(); if (!dragging) handleLocationClick(name); }}
+                      onMouseEnter={() => setHoveredLoc(name)}
+                      onMouseLeave={() => setHoveredLoc(null)}
+                      onMouseDown={isEndpoint ? (e) => handleDragStart(isStart ? "start" : "end", e) : undefined}
+                      onTouchStart={isEndpoint ? (e) => handleDragStart(isStart ? "start" : "end", e) : undefined}
+                      style={{ cursor: isEndpoint ? "grab" : "pointer" }}>
+
+                      {/* Hover highlight ring */}
+                      {(isHovered && !isEndpoint) && (
+                        <circle cx={pos.x} cy={pos.y} r={18} fill="none" stroke={color} strokeWidth={1} opacity={0.3}
+                          strokeDasharray="4 3">
+                          <animateTransform attributeName="transform" type="rotate" from={`0 ${pos.x} ${pos.y}`} to={`360 ${pos.x} ${pos.y}`} dur="6s" repeatCount="indefinite" />
+                        </circle>
+                      )}
+
+                      {/* Endpoint pulse ring */}
+                      {isEndpoint && (
+                        <circle cx={displayX} cy={displayY} r={12} fill="none" stroke={color} strokeWidth={1.5} opacity={0.4}>
+                          <animate attributeName="r" values="10;20;10" dur="2s" repeatCount="indefinite" />
+                          <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite" />
+                        </circle>
+                      )}
+
+                      {/* Main dot */}
+                      <circle cx={displayX} cy={displayY} r={isEndpoint ? 9 : isHovered ? 7 : isOnRoute ? 6 : 5}
+                        fill={color} opacity={isEndpoint ? 1 : isHovered ? 0.9 : isOnRoute ? 0.7 : 0.4}
+                        style={{ filter: `drop-shadow(0 0 ${isEndpoint ? 8 : 4}px ${color})`, transition: dragging ? "none" : "all 0.2s" }} />
+                      {isEndpoint && <circle cx={displayX} cy={displayY} r={4} fill="#000" opacity={0.3} />}
+
+                      {/* Endpoint flag icons */}
+                      {isStart && <text x={displayX} y={displayY - 16} textAnchor="middle" fontSize={13} style={{ pointerEvents: "none" }}>🟢</text>}
+                      {isEnd && <text x={displayX} y={displayY - 16} textAnchor="middle" fontSize={13} style={{ pointerEvents: "none" }}>🔴</text>}
+
+                      {/* Label */}
+                      <text x={displayX} y={displayY + (isEndpoint ? 22 : 16)} textAnchor="middle"
+                        fill={isEndpoint ? color : isHovered ? "#fff" : isOnRoute ? color : "rgba(255,255,255,0.4)"}
+                        fontSize={isEndpoint ? 10 : isHovered ? 10 : 8} fontFamily="Righteous, cursive"
+                        style={{ filter: (isEndpoint || isHovered) ? `drop-shadow(0 0 4px ${color})` : "none", pointerEvents: "none", transition: "all 0.2s" }}>
                         {name}
                       </text>
+
+                      {/* Hover tooltip with terrain info */}
+                      {isHovered && !isEndpoint && (
+                        <g>
+                          <rect x={pos.x - 55} y={pos.y - 36} width={110} height={22} rx={4}
+                            fill="rgba(0,0,0,0.9)" stroke={color} strokeWidth={0.8} />
+                          <text x={pos.x} y={pos.y - 22} textAnchor="middle"
+                            fill={color} fontSize={8} fontFamily="Righteous, cursive">
+                            {meta?.emoji} {interactionMode === "set-start" ? "Set as start" : interactionMode === "set-end" ? "Set as end" : meta?.terrain}
+                          </text>
+                        </g>
+                      )}
+                      {/* Drag tooltip for endpoints */}
+                      {isHovered && isEndpoint && !dragging && (
+                        <g>
+                          <rect x={pos.x - 40} y={pos.y - 36} width={80} height={22} rx={4}
+                            fill="rgba(0,0,0,0.9)" stroke={color} strokeWidth={0.8} />
+                          <text x={pos.x} y={pos.y - 22} textAnchor="middle"
+                            fill={color} fontSize={8} fontFamily="Righteous, cursive">
+                            ✋ Drag to move
+                          </text>
+                        </g>
+                      )}
                     </g>
                   );
                 })}
+
+                {/* Snap indicator while dragging */}
+                {dragging && dragPos && (() => {
+                  const nearest = findNearest(dragPos.x, dragPos.y);
+                  if (!nearest || !locations[nearest]) return null;
+                  const snapPos = locations[nearest];
+                  return (
+                    <>
+                      <line x1={dragPos.x} y1={dragPos.y} x2={snapPos.x} y2={snapPos.y}
+                        stroke="#FFE600" strokeWidth={1} strokeDasharray="4 4" opacity={0.5} style={{ pointerEvents: "none" }} />
+                      <circle cx={snapPos.x} cy={snapPos.y} r={14} fill="none" stroke="#FFE600" strokeWidth={2} opacity={0.6}
+                        style={{ pointerEvents: "none" }}>
+                        <animate attributeName="r" values="12;18;12" dur="1s" repeatCount="indefinite" />
+                      </circle>
+                      <text x={snapPos.x} y={snapPos.y + 26} textAnchor="middle" fill="#FFE600" fontSize={9} fontFamily="Righteous"
+                        style={{ pointerEvents: "none" }}>
+                        Snap: {nearest}
+                      </text>
+                    </>
+                  );
+                })()}
 
                 {/* Vignette */}
                 <rect width="880" height="700" fill="url(#rp-vignette)" style={{ pointerEvents: "none" }} />
@@ -551,7 +719,7 @@ export default function RoutePlanner() {
                     </p>
                     <div className="space-y-2">
                       {recentRoutes.map((r, i) => (
-                        <button key={i} onClick={() => { setStart(r.start); setEnd(r.end); calculate(r.start, r.end); }}
+                        <button key={i} onClick={() => handleRecent(r)}
                           className="w-full text-left glass-panel p-3 transition-all hover:border-[#FF007F]/30 flex items-center gap-3"
                           data-testid={`recent-route-${i}`}>
                           <Clock size={12} className="text-gray-600 flex-shrink-0" />
