@@ -77,13 +77,58 @@ const RULER_QUOTES = [
 ];
 
 const POIS = [
-  { id: "ocean-drive", name: "Ocean Drive", x: 695, y: 445, icon: "🏖️" },
-  { id: "macarthur-causeway", name: "MacArthur Causeway", x: 648, y: 432, icon: "🌉" },
-  { id: "honda-bridge", name: "Honda Bridge", x: 748, y: 592, icon: "🌉" },
-  { id: "thrillbilly", name: "Thrillbilly Mud Club", x: 278, y: 505, icon: "🏎️" },
-  { id: "sugar-mill", name: "Sugar Mill", x: 380, y: 350, icon: "🏭" },
-  { id: "kalaga-summit", name: "Kalaga Summit", x: 430, y: 100, icon: "⛰️" },
-  { id: "gellhorn-port", name: "Gellhorn Port", x: 90, y: 200, icon: "⚓" },
+  // ── VICE CITY (urban hub) ──
+  { id: "ocean-drive",       name: "Ocean Drive",          x: 695, y: 445, category: "landmark",   desc: "Iconic neon-lit strip" },
+  { id: "vci-airport",       name: "VCI Airport",          x: 570, y: 390, category: "landmark",   desc: "Vice City International" },
+  { id: "kaseya-center",     name: "Sahara Arena",         x: 635, y: 420, category: "landmark",   desc: "Major sports venue" },
+  { id: "biscayne-island",   name: "Biscayne Island",      x: 660, y: 460, category: "scenic",     desc: "Connecting strip to Vice Beach" },
+  { id: "hotel-neptune",     name: "Hotel Neptune",        x: 710, y: 460, category: "business",   desc: "Luxury beachfront hotel" },
+  { id: "hotel-dixon",       name: "Hotel Dixon",          x: 700, y: 430, category: "business",   desc: "Art Deco landmark" },
+  { id: "king-diamonds",     name: "King of Diamonds",     x: 620, y: 470, category: "criminal",   desc: "Gentlemen's establishment" },
+  { id: "delights-cabaret",  name: "Delights Cabaret",     x: 650, y: 490, category: "criminal",   desc: "Underground nightclub" },
+  { id: "ammun-vc",          name: "Ammu-Nation VC",       x: 590, y: 440, category: "business",   desc: "Vice City firearms dealer" },
+  { id: "rideout-customs",   name: "Rideout Customs",      x: 560, y: 465, category: "business",   desc: "Vehicle modification shop" },
+  { id: "chips-body",        name: "Chip's Body Shop",     x: 540, y: 480, category: "business",   desc: "Auto repair & panel beating" },
+  { id: "macarthur",         name: "Julia Tuttle Causeway", x: 648, y: 432, category: "landmark",   desc: "Major bridge to Vice Beach" },
+  { id: "jack-hearts",       name: "Jack of Hearts Club",  x: 610, y: 505, category: "criminal",   desc: "Licensed gambling floor" },
+  { id: "vc-downtown",       name: "Vice City Downtown",   x: 580, y: 415, category: "scenic",     desc: "Neon skyline district" },
+
+  // ── LEONIDA KEYS (tropical islands) ──
+  { id: "honda-bridge",      name: "Honda Bridge",         x: 748, y: 592, category: "landmark",   desc: "Gateway to the Keys" },
+  { id: "keys-marina",       name: "Keys Marina",          x: 730, y: 620, category: "scenic",     desc: "Yacht docks & fishing boats" },
+  { id: "keys-dive",         name: "The Blue Hole",        x: 700, y: 640, category: "scenic",     desc: "Famous dive site" },
+  { id: "rusty-anchor",      name: "The Rusty Anchor",     x: 760, y: 610, category: "business",   desc: "Waterfront bar & grill" },
+
+  // ── GRASSRIVERS (swamp / everglades) ──
+  { id: "thrillbilly",       name: "Thrillbilly Mud Club",  x: 278, y: 505, category: "criminal",   desc: "Off-road racing & bootleg" },
+  { id: "flea-market",       name: "Tisha-Wocka Flea Market", x: 350, y: 490, category: "business", desc: "Swap meet with questionable goods" },
+  { id: "airboat-tours",     name: "Gator Airboat Tours",   x: 310, y: 520, category: "scenic",     desc: "Licensed alligator encounters" },
+  { id: "moonshine-still",   name: "Moonshine Still",       x: 240, y: 470, category: "hideout",    desc: "Abandoned — or is it?" },
+  { id: "gator-farm",        name: "Big Al's Gator Farm",   x: 380, y: 530, category: "business",   desc: "Farm-to-table reptile" },
+  { id: "grassrivers-west",  name: "West Grassrivers",      x: 200, y: 490, category: "scenic",     desc: "Untouched wetlands" },
+
+  // ── AMBROSIA (industrial / farming) ──
+  { id: "sugar-mill",        name: "Sugar Mill",            x: 380, y: 350, category: "landmark",   desc: "Historic industrial site" },
+  { id: "uncle-jack",        name: "Uncle Jack's Liquor",   x: 340, y: 310, category: "business",   desc: "Cheapest bourbon in Leonida" },
+  { id: "pawn-gun",          name: "Pawn & Gun",            x: 300, y: 340, category: "business",   desc: "Buy, sell, trade — no questions" },
+  { id: "stash-house-a",     name: "Farm Stash House",      x: 355, y: 380, category: "hideout",    desc: "Looks like a barn. Isn't." },
+  { id: "ambrosia-church",   name: "Ambrosia Baptist",      x: 320, y: 280, category: "landmark",   desc: "Sunday sermons & secrets" },
+
+  // ── PORT GELLHORN (industrial port) ──
+  { id: "gellhorn-port",     name: "Gellhorn Docks",        x: 90,  y: 200, category: "landmark",   desc: "Main shipping terminal" },
+  { id: "starlet-motel",     name: "Starlet Motel",         x: 110, y: 160, category: "hideout",    desc: "Flickering vacancy sign 24/7" },
+  { id: "gulf-refinery",     name: "Gulf Refinery",         x: 70,  y: 130, category: "business",   desc: "Petrochemical complex" },
+  { id: "ammun-pg",          name: "Ammu-Nation PG",        x: 130, y: 230, category: "business",   desc: "Port district firearms" },
+  { id: "dockworker-bar",    name: "The Bait Shop",         x: 55,  y: 170, category: "criminal",   desc: "Not actually about fishing" },
+
+  // ── MT. KALAGA NP (forest / wilderness) ──
+  { id: "kalaga-summit",     name: "Kalaga Summit",         x: 430, y: 100, category: "scenic",     desc: "Highest point in Leonida" },
+  { id: "ranger-station",    name: "Ranger Station",        x: 350, y: 80,  category: "landmark",   desc: "Park HQ — closed after dark" },
+  { id: "fire-tower",        name: "Fire Lookout Tower",    x: 480, y: 70,  category: "scenic",     desc: "360° panoramic views" },
+  { id: "trail-head",        name: "Kalaga Trail Head",     x: 290, y: 120, category: "scenic",     desc: "Main hiking entry point" },
+  { id: "hidden-cabin",      name: "Abandoned Cabin",       x: 520, y: 130, category: "easter_egg", desc: "Something scratched on the wall..." },
+  { id: "bunker-entrance",   name: "Military Bunker",       x: 560, y: 90,  category: "easter_egg", desc: "Sealed since 1962. Maybe." },
+  { id: "kalaga-falls",      name: "Kalaga Falls",          x: 400, y: 150, category: "scenic",     desc: "Waterfall swimming hole" },
 ];
 
 
@@ -496,7 +541,7 @@ export default function InteractiveMap() {
           {CATEGORIES.map(cat => {
             const active = activeCategories.has(cat);
             const color = CAT_COLORS[cat];
-            const count = communityPins.filter(p => p.category === cat).length;
+            const count = POIS.filter(p => p.category === cat).length + communityPins.filter(p => p.category === cat).length;
             return (
               <button key={cat} onClick={() => toggleCategory(cat)}
                 className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all"
@@ -662,33 +707,42 @@ export default function InteractiveMap() {
               );
             })}
 
-            {/* ── POI MARKERS ── */}
-            {viewMode === "leonida" && POIS.map(poi => (
-              <g key={poi.id} data-testid={`poi-${poi.id}`}
-                onMouseEnter={() => setHoveredPoi(poi.id)} onMouseLeave={() => setHoveredPoi(null)}
-                style={{ cursor: "pointer" }}>
-                {/* Outer pulse ring */}
-                <circle cx={poi.x} cy={poi.y} r={12} fill="none" stroke="#FFE600" strokeWidth={0.8} opacity={0.3}>
-                  <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
-                </circle>
-                {/* Main dot */}
-                <circle cx={poi.x} cy={poi.y} r={6} fill="#FFE600" opacity={0.9}
-                  style={{ filter: "drop-shadow(0 0 6px #FFE600)" }} />
-                <circle cx={poi.x} cy={poi.y} r={3} fill="#000" opacity={0.4} />
-                {/* Hover tooltip */}
-                {hoveredPoi === poi.id && (
-                  <g>
-                    <rect x={poi.x - 55} y={poi.y - 28} width={110} height={20} rx={4}
-                      fill="rgba(0,0,0,0.9)" stroke="#FFE600" strokeWidth={0.8} />
-                    <text x={poi.x} y={poi.y - 15} textAnchor="middle"
-                      fill="#FFE600" fontSize={8} fontFamily="Righteous, cursive">
-                      {poi.icon} {poi.name}
-                    </text>
-                  </g>
-                )}
-              </g>
-            ))}
+            {/* ── POI MARKERS (filtered by active categories) ── */}
+            {viewMode === "leonida" && POIS.filter(p => activeCategories.has(p.category)).map(poi => {
+              const color = CAT_COLORS[poi.category] || "#FFE600";
+              const icon = CAT_ICONS[poi.category] || "📍";
+              return (
+                <g key={poi.id} data-testid={`poi-${poi.id}`}
+                  onMouseEnter={() => setHoveredPoi(poi.id)} onMouseLeave={() => setHoveredPoi(null)}
+                  style={{ cursor: "pointer" }}>
+                  {/* Outer pulse ring */}
+                  <circle cx={poi.x} cy={poi.y} r={12} fill="none" stroke={color} strokeWidth={0.8} opacity={0.3}>
+                    <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
+                  </circle>
+                  {/* Main dot — category colored */}
+                  <circle cx={poi.x} cy={poi.y} r={hoveredPoi === poi.id ? 7 : 5} fill={color}
+                    opacity={hoveredPoi === poi.id ? 1 : 0.7}
+                    style={{ filter: `drop-shadow(0 0 ${hoveredPoi === poi.id ? 8 : 4}px ${color})`, transition: "all 0.15s" }} />
+                  <circle cx={poi.x} cy={poi.y} r={2.5} fill="#000" opacity={0.3} />
+                  {/* Hover tooltip — name + desc */}
+                  {hoveredPoi === poi.id && (
+                    <g>
+                      <rect x={poi.x - 75} y={poi.y - 38} width={150} height={30} rx={5}
+                        fill="rgba(5,5,5,0.95)" stroke={color} strokeWidth={0.8} />
+                      <text x={poi.x} y={poi.y - 23} textAnchor="middle"
+                        fill={color} fontSize={8} fontFamily="Righteous, cursive">
+                        {icon} {poi.name}
+                      </text>
+                      <text x={poi.x} y={poi.y - 13} textAnchor="middle"
+                        fill="rgba(255,255,255,0.5)" fontSize={6.5} fontFamily="Inter, sans-serif">
+                        {poi.desc}
+                      </text>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
 
             {/* ── COMMUNITY PINS (filtered by active categories) ── */}
             {communityPins.filter(p => activeCategories.has(p.category)).map(pin => {
