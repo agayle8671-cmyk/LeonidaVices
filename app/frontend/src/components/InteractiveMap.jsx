@@ -777,6 +777,8 @@ export default function InteractiveMap() {
                     }
                   }}
                   style={{ cursor: "pointer" }}>
+                  {/* Invisible hit area — makes clicking easier */}
+                  <circle cx={poi.x} cy={poi.y} r={20} fill="transparent" />
                   {/* Selected ring */}
                   {isSel && (
                     <circle cx={poi.x} cy={poi.y} r={18} fill="none" stroke={color} strokeWidth={2} strokeDasharray="4 3" opacity={0.8}>
