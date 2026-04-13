@@ -76,6 +76,51 @@ const RULER_QUOTES = [
   "The scenic route! Also the only route.",
 ];
 
+/* Honest John's one-liner reviews for POIs */
+const POI_REVIEWS = {
+  "ocean-drive": "Sunburn by day, robbery by night. Bring sunscreen and a lawyer.",
+  "vci-airport": "TSA lines so long, the cartel uses private strips instead.",
+  "kaseya-center": "Great acoustics for both basketball and gunfights.",
+  "biscayne-island": "The view's gorgeous. So are the drug deals.",
+  "hotel-neptune": "Five stars. Four of them are bullet holes.",
+  "hotel-dixon": "Art Deco on the outside, organized crime on the inside.",
+  "king-diamonds": "Not actually a gentleman's establishment.",
+  "delights-cabaret": "The cover charge is the least expensive part of your evening.",
+  "ammun-vc": "Walk in broke, walk out broke AND armed.",
+  "rideout-customs": "They don't ask where the car came from.",
+  "chips-body": "Chip can fix bullet holes. No questions. Ever.",
+  "macarthur": "Named after a general. Defended by nobody.",
+  "jack-hearts": "The house always wins. And the house is the cartel.",
+  "vc-downtown": "The neon hides the bloodstains beautifully.",
+  "honda-bridge": "The weight limit sign is decorative.",
+  "keys-marina": "Nice yachts. Don't ask who owns them.",
+  "keys-dive": "Deep enough to hide almost anything.",
+  "rusty-anchor": "The shrimp is fresh. The clientele is not.",
+  "thrillbilly": "200 horsepower, 0 brain cells, maximum fun.",
+  "flea-market": "Everything is 'genuine.' Everything.",
+  "airboat-tours": "The gators are the safest thing out here.",
+  "moonshine-still": "Closed since 1987. The smoke is just... weather.",
+  "gator-farm": "Farm to table. The table in question is made of teeth.",
+  "grassrivers-west": "No cell service. No witnesses. No problem.",
+  "sugar-mill": "The sugar is not the most trafficked substance here.",
+  "uncle-jack": "Jack's been 'uncle' to six different crime families.",
+  "pawn-gun": "The 'no questions asked' policy is real.",
+  "stash-house-a": "That's a LOT of fertilizer for a farm that grows nothing.",
+  "ambrosia-church": "Confession booth doubles as a dead drop.",
+  "gellhorn-port": "The containers marked 'farming equipment' aren't.",
+  "starlet-motel": "The roaches have tenure.",
+  "gulf-refinery": "EPA violations? What EPA violations?",
+  "ammun-pg": "The dock special: buy a boat motor, get a free AR-15.",
+  "dockworker-bar": "The bait is information. The fish are feds.",
+  "kalaga-summit": "Beautiful view. Terrible cell reception. Perfect for disappearing.",
+  "ranger-station": "The ranger saw nothing. Because there is no ranger.",
+  "fire-tower": "Great for birdwatching. And stash spotting.",
+  "trail-head": "Hikers go in. Some hikers come out.",
+  "hidden-cabin": "The scratches on the wall are NOT from animals.",
+  "bunker-entrance": "Kennedy-era. CIA denies it exists. The lock is new.",
+  "kalaga-falls": "Swim at your own risk. The risk is very real.",
+};
+
 const POIS = [
   // ── VICE CITY (urban hub) ──
   { id: "ocean-drive",       name: "Ocean Drive",          x: 695, y: 445, category: "landmark",   desc: "Iconic neon-lit strip" },
@@ -205,6 +250,9 @@ export default function InteractiveMap() {
 
   // ── Feature 4: Shareable Links ──
   const [linkCopied, setLinkCopied] = useState(false);
+
+  // ── POI Selection ──
+  const [selectedPoi, setSelectedPoi] = useState(null);
 
   // ── Zoom / Pan State ──
   const [zoom, setZoom] = useState(1);
@@ -711,22 +759,46 @@ export default function InteractiveMap() {
             {viewMode === "leonida" && POIS.filter(p => activeCategories.has(p.category)).map(poi => {
               const color = CAT_COLORS[poi.category] || "#FFE600";
               const icon = CAT_ICONS[poi.category] || "📍";
+              const isSel = selectedPoi === poi.id;
               return (
                 <g key={poi.id} data-testid={`poi-${poi.id}`}
                   onMouseEnter={() => setHoveredPoi(poi.id)} onMouseLeave={() => setHoveredPoi(null)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (addPinMode || rulerMode) return;
+                    setSelectedPoi(isSel ? null : poi.id);
+                    setSelected(null);
+                    // Zoom to POI
+                    if (!isSel) {
+                      setZoom(2.8);
+                      const cx = BASE_VIEWBOX.w / 2;
+                      const cy = BASE_VIEWBOX.h / 2;
+                      setPan({ x: (cx - poi.x) * 0.8, y: (cy - poi.y) * 0.8 });
+                    }
+                  }}
                   style={{ cursor: "pointer" }}>
+                  {/* Selected ring */}
+                  {isSel && (
+                    <circle cx={poi.x} cy={poi.y} r={18} fill="none" stroke={color} strokeWidth={2} strokeDasharray="4 3" opacity={0.8}>
+                      <animateTransform attributeName="transform" type="rotate" from={`0 ${poi.x} ${poi.y}`} to={`360 ${poi.x} ${poi.y}`} dur="4s" repeatCount="indefinite" />
+                    </circle>
+                  )}
                   {/* Outer pulse ring */}
                   <circle cx={poi.x} cy={poi.y} r={12} fill="none" stroke={color} strokeWidth={0.8} opacity={0.3}>
                     <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite" />
                     <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
                   </circle>
                   {/* Main dot — category colored */}
-                  <circle cx={poi.x} cy={poi.y} r={hoveredPoi === poi.id ? 7 : 5} fill={color}
-                    opacity={hoveredPoi === poi.id ? 1 : 0.7}
-                    style={{ filter: `drop-shadow(0 0 ${hoveredPoi === poi.id ? 8 : 4}px ${color})`, transition: "all 0.15s" }} />
+                  <circle cx={poi.x} cy={poi.y} r={isSel ? 8 : hoveredPoi === poi.id ? 7 : 5} fill={color}
+                    opacity={isSel ? 1 : hoveredPoi === poi.id ? 1 : 0.7}
+                    style={{ filter: `drop-shadow(0 0 ${isSel ? 12 : hoveredPoi === poi.id ? 8 : 4}px ${color})`, transition: "all 0.15s" }} />
                   <circle cx={poi.x} cy={poi.y} r={2.5} fill="#000" opacity={0.3} />
+                  {/* Category icon on selected */}
+                  {isSel && (
+                    <text x={poi.x} y={poi.y + 4} textAnchor="middle" fontSize={9} style={{ pointerEvents: "none" }}>{icon}</text>
+                  )}
                   {/* Hover tooltip — name + desc */}
-                  {hoveredPoi === poi.id && (
+                  {hoveredPoi === poi.id && !isSel && (
                     <g>
                       <rect x={poi.x - 75} y={poi.y - 38} width={150} height={30} rx={5}
                         fill="rgba(5,5,5,0.95)" stroke={color} strokeWidth={0.8} />
@@ -930,6 +1002,8 @@ export default function InteractiveMap() {
         {pendingPin ? (
           <PinForm form={pinForm} setForm={setPinForm} onSubmit={submitPin} onCancel={cancelPin}
             submitting={submitting} user={user} />
+        ) : selectedPoi ? (
+          <PoiPanel poi={POIS.find(p => p.id === selectedPoi)} onClose={() => setSelectedPoi(null)} />
         ) : selected ? (
           <RegionPanel data={getRegionData(selected)} path={REGION_PATHS.find(r => r.id === selected)}
             onClose={() => setSelected(null)} dangerAnimated={dangerAnimated}
@@ -939,6 +1013,99 @@ export default function InteractiveMap() {
             onDelete={deletePin} onUpvote={upvotePin} onFlag={flagPin}
             user={user} onOpenAuth={openAuth} />
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   POI DETAIL PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+function PoiPanel({ poi, onClose }) {
+  if (!poi) return null;
+  const color = CAT_COLORS[poi.category] || "#FFE600";
+  const icon = CAT_ICONS[poi.category] || "📍";
+  const review = POI_REVIEWS[poi.id] || "Honest John has no comment. That's suspicious.";
+  const regionId = detectRegion(poi.x, poi.y);
+  const regionPath = REGION_PATHS.find(r => r.id === regionId);
+  const regionName = regionPath?.name || "Unknown";
+  const regionColor = regionPath?.stroke || "#888";
+
+  return (
+    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-lg">{icon}</span>
+            <span className="text-[10px] font-heading px-2 py-0.5 rounded-full"
+              style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
+              {poi.category.replace("_", " ")}
+            </span>
+          </div>
+          <h2 className="font-heading text-2xl text-white" style={{ textShadow: `0 0 15px ${color}` }}>{poi.name}</h2>
+          <p className="font-body text-gray-500 text-xs mt-0.5 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: regionColor }} />
+            {regionName}
+          </p>
+        </div>
+        <button onClick={onClose} className="text-gray-500 hover:text-white p-1"><X size={18} /></button>
+      </div>
+
+      {/* Description */}
+      <div className="glass-panel p-4 mb-4" style={{ borderColor: `${color}25` }}>
+        <p className="font-body text-gray-300 text-sm leading-relaxed">{poi.desc}</p>
+      </div>
+
+      {/* Honest John Review */}
+      <div className="glass-panel p-4 mb-4" style={{ borderColor: `${color}30` }}>
+        <div className="flex items-center gap-2 mb-2">
+          <Star size={14} style={{ color }} />
+          <p className="font-heading text-sm" style={{ color }}>Honest John's Review</p>
+        </div>
+        <p className="font-body text-gray-300 text-sm leading-relaxed italic">"{review}"</p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="glass-panel p-3 text-center">
+          <p className="font-body text-gray-500 text-[10px]">Category</p>
+          <p className="font-heading text-sm mt-1" style={{ color }}>{icon} {poi.category.replace("_", " ")}</p>
+        </div>
+        <div className="glass-panel p-3 text-center">
+          <p className="font-body text-gray-500 text-[10px]">Region</p>
+          <p className="font-heading text-sm mt-1" style={{ color: regionColor }}>{regionName}</p>
+        </div>
+      </div>
+
+      {/* Coordinates */}
+      <div className="glass-panel p-3 mb-4 flex items-center justify-between">
+        <span className="font-body text-gray-600 text-xs">Map Coordinates</span>
+        <span className="font-heading text-xs text-white">{poi.x}, {poi.y}</span>
+      </div>
+
+      {/* Ask Honest John */}
+      <button
+        onClick={() => {
+          const chatBtn = document.querySelector('[data-testid="chat-open-btn"]');
+          if (chatBtn) chatBtn.click();
+          setTimeout(() => {
+            const input = document.querySelector('[data-testid="chat-input"]');
+            if (input) {
+              const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+              nativeInputValueSetter.call(input, `Tell me about ${poi.name}`);
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }, 400);
+        }}
+        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-heading transition-all hover:scale-[1.02]"
+        style={{ background: `${color}15`, border: `1px solid ${color}40`, color }}>
+        <MessageCircle size={14} />Ask About {poi.name}
+      </button>
+
+      <div className="mt-3 flex items-start gap-2 text-xs text-gray-700 font-body">
+        <AlertTriangle size={10} className="flex-shrink-0 mt-0.5" style={{ color }} />
+        <span>Location data sourced from trailer analysis. Subject to change.</span>
       </div>
     </div>
   );
